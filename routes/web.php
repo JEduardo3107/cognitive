@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+// Secciones estaticas del footer
+Route::controller(HomeController::class)->group(function(){
+    Route::get('/', 'index')->name('home.index');
 });
 
 Route::get('/dashboard', function () {
