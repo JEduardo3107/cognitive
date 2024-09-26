@@ -1,18 +1,21 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
-use App\Models\ProfileQuestion;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller{
     function index(){
+        // Obtener el usuario autenticado
+        $user = Auth::user();
 
-        //$questions = ProfileQuestion::with('answers')->where('is_enabled', true)->get();
-        $questions = ProfileQuestion::where('is_enabled', true)->get()->groupBy('area');
+        // Verifica si el perfil está completo
+        if(!$user->profile_completed){
+            // Redirige a la ruta finishProfile.index si el perfil no está completo
+            return redirect()->route('finishProfile.index');
+        }
 
-        return view('welcome', [
-            'questions' => $questions
-        ]);
+        // Si el perfil está completo, muestra la vista 'welcome'
+        return view('welcome');
     }
 }

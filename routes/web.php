@@ -1,12 +1,20 @@
 <?php
 
+use App\Http\Controllers\FinishProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 // Secciones estaticas del footer
+/*
 Route::controller(HomeController::class)->group(function(){
     Route::get('/', 'index')->name('home.index');
+});*/
+
+Route::middleware('auth')->group(function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home.index');
+    
+    Route::get('/finish-profile', [FinishProfileController::class, 'index'])->name('finishProfile.index');
 });
 
 Route::get('/dashboard', function () {

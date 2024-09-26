@@ -19,6 +19,11 @@ class ProfileQuestion extends Model{
         'id',
         'area',
         'question_title',
-        'is_enabled'
+        'is_enabled',
+        'order_position'
     ];
+
+    public function answers(){
+        return $this->hasMany(ProfileQuestionAnswer::class, 'profile_question_id', 'id');
+    }
 }

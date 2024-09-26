@@ -14,7 +14,8 @@ return new class extends Migration{
             $table->string('area', 100);
             $table->string('question_title', 600);
             $table->boolean('is_enabled')->default(true);
-            $table->timestamps(); 
+            $table->integer('order_position');
+            $table->timestamps();
             $table->engine = 'innoDB';
         });
     }
