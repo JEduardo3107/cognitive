@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class HomeController extends Controller{
     function index(){
         // Obtener el usuario autenticado
         $user = Auth::user();
 
-        // Verifica si el perfil está completo
-        if(!$user->profile_completed){
-            // Redirige a la ruta finishProfile.index si el perfil no está completo
+        $currentUser = User::findOrFail(Auth::id());
+
+        if(!$currentUser->hasRole('administrador') && !$user->profile_completed){
             return redirect()->route('finishProfile.index');
         }
 

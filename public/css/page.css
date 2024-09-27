@@ -141,6 +141,10 @@ input::-moz-selection,
     scroll-behavior: smooth;
 }*/
 
+.body__content{
+    background: #EFF2F5;
+}
+
 .dark-body{
     background-image: linear-gradient(to top, #00020e, #020616, #03091d, #030d23, #00102a);
 }

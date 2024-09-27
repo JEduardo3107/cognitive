@@ -1,4 +1,4 @@
-<button {{ $attributes->merge(['type' => 'submit', 'class' => 'noDefaultStyle cursorPointerEvent']) }}>
+<button {{ $attributes->merge(['type' => 'submit', 'class' => 'noDefaultStyle buttonEditProfile cursorPointerEvent']) }}>
     {{ $slot }}
 </button>
 

@@ -9,9 +9,12 @@
 @endpush
 
 @section('content')
-    <p>
-        actividades de aprendizaje
-    </p>
+    {{-- Importar menu --}}
+    <x-menu-component />
+
+    
+
+
 @endsection
 
 @push('script')

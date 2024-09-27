@@ -1,0 +1,125 @@
+:root{
+    --boxshadow: 0 0.25rem 0.375rem -0.063rem rgb(0 0 0 / .1), 0 0.125rem 0.25rem -0.125rem rgb(0 0 0 / .1);
+    --colorWhite: #FFFFFF;
+    --colorWhiteHover: #F5F5F5;
+    --colorBlack: #2C2C2C;
+    --colorBlue: #2D568B;
+    --colorBlueBg: #AACBDD;
+    --colorBlueLight: #E3F0F6;
+
+    --colorWhiteBorder: #EFF2F5;
+    --colorGreyBg: #E1E3E5;
+
+    --colorRedAlert: #DB3B3B;
+    --colorGreen: #2C8A4B;
+}
+
+.menu{
+    width: 90%;
+    /*max-width: 1000px;*/
+    height: 3.75rem;
+    background: var(--colorWhite);
+    position: fixed;
+   /* left: 50%;
+    transform: translateX(-50%);*/
+    left: 5%;
+    box-shadow: var(--boxshadow);
+    border-bottom-left-radius: .5rem;
+    border-bottom-right-radius: .5rem;
+    box-sizing: border-box;
+    padding: 0.625rem 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+    justify-items: flex-end;
+    z-index: 70;
+}
+
+.menu__logo-text{
+    width: 100%;
+    text-align: left;
+    color: var(--colorBlue);
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.menu__activador{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    gap: .5rem;
+    cursor: pointer;
+}
+
+.menu__activador--icono{
+    width: 1rem;
+    height: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu__activador--icono::before{
+    content: "";
+    width: 0.375rem;
+    height: 0.375rem;
+    border-left: 0.125rem solid var(--colorBlack);
+    border-bottom: 0.125rem solid var(--colorBlack);
+    transform: rotate(-45deg) translate(10%, -10%);
+}
+
+.menu--active .menu__activador--icono::before{
+    transform: rotate(135deg) translate(10%, -10%);
+}
+
+.menu__items{
+    position: fixed;
+    width: auto;
+    height: auto;
+    background: var(--colorWhite);
+    top: 4.375rem;
+    right: 5%;
+    box-sizing: border-box;
+    padding: 1rem;
+    border-radius: .5rem;
+    box-shadow: var(--boxshadow);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 80;
+}
+
+.menu__items--active{
+    display: flex;
+}
+
+.menu__items a,
+.menu__item{
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 0.25rem;
+    text-align: center;
+    border-radius: .313rem;
+}
+
+.menu__item:hover{
+    background: var(--colorWhiteHover);
+}
+
+.menu__item--btn{
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+.menu__activador--icono::before,
+.menu__items--active{
+    transition: all .25s ease-in-out;
+}

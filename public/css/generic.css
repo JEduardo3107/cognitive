@@ -1,0 +1,19 @@
+/* Titulos */
+.card-type-generic__title{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 1rem .5rem 1rem;
+    font-weight: bold;
+    color: #2C2C2C;
+    text-align: center;
+    border-bottom: 2px solid #E1E3E5;
+}
+
+.card-type-generic__title--first{
+    margin-bottom: 1rem;
+}
+
+
+.filter--color-w{
+    background: white;
+}
