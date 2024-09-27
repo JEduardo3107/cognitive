@@ -9,7 +9,7 @@
 @endpush
 
 @section('content')
-    <form action="" method="post" class="card-container">
+    <form action="{{ route('finishProfile.store') }}" method="post" class="card-container unselectable" id="form-to-question-profile">
         @csrf
         <div class="progress-container">
             <span class="progress-container__title" id="question-counter">

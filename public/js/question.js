@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const backButton = document.getElementById('btn-back');
     const questionCounter = document.getElementById('question-counter');
     const progressBar = document.getElementById('progress-bar');
+    const form = document.getElementById("form-to-question-profile");
 
     function updateProgress(currentIndex) {
         const totalQuestions = cards.length;
@@ -33,12 +34,17 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Si estamos en la última tarjeta, evitar cambios
-        if (currentIndex === cards.length - 1) {
-            // Aquí podrías manejar el envío del formulario o lo que necesites
-            alert("Formulario enviado"); // O el código que uses para enviar el formulario
-            return; // Salir de la función
+        // Si estamos en la última tarjeta, enviar el formulario con el ID "form-to-question-profile"
+        if(currentIndex === cards.length - 1){
+            if(form){
+                form.submit();
+            }else{
+                console.error("Formulario con ID 'form-to-question-profile' no encontrado.");
+            }
+            
+            return;
         }
+
 
         // Actualiza la tarjeta actual
         if (currentCard) {

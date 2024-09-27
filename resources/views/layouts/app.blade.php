@@ -34,7 +34,7 @@
     </script>
 	<div class="body__content" id="body__content">
 		@yield('content')
-        {{--<x-layouts.status-component />--}}
+        <x-status-component />
 	</div>
 </body>
 @stack('script')

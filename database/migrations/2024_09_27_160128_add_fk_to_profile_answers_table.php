@@ -9,8 +9,11 @@ return new class extends Migration{
      * Run the migrations.
      */
     public function up(): void{
-        Schema::table('profile_question_answers', function(Blueprint $table){
-            $table->foreign('profile_question_id')->references('id')->on('profile_questions')->onDelete('cascade');
+
+        //DB::statement('ALTER TABLE users ENGINE = InnoDB');
+
+        Schema::table('profile_answers', function(Blueprint $table){
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -18,8 +21,8 @@ return new class extends Migration{
      * Reverse the migrations.
      */
     public function down(): void{
-        Schema::table('profile_question_answers', function(Blueprint $table){
-            $table->dropForeign(['profile_question_id']);
+        Schema::table('profile_answers', function(Blueprint $table){
+            $table->dropForeign(['user_id']);
         });
     }
 };

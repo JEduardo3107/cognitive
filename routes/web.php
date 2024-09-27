@@ -15,6 +15,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
     
     Route::get('/finish-profile', [FinishProfileController::class, 'index'])->name('finishProfile.index');
+    Route::post('/finish-profile', [FinishProfileController::class, 'store'])->name('finishProfile.store');
 });
 
 Route::get('/dashboard', function () {

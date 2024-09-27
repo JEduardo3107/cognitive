@@ -9,7 +9,7 @@ return new class extends Migration{
      * Run the migrations.
      */
     public function up(): void{
-        Schema::table('users', function (Blueprint $table){
+        Schema::table('users', function(Blueprint $table){
             $table->boolean('profile_completed')->after('email')->default(false);
         });
     }
@@ -18,7 +18,7 @@ return new class extends Migration{
      * Reverse the migrations.
      */
     public function down(): void{
-        Schema::table('users', function (Blueprint $table){
+        Schema::table('users', function(Blueprint $table){
             $table->dropColumn('profile_completed');
         });
     }

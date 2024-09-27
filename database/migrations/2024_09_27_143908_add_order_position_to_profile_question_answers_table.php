@@ -10,7 +10,7 @@ return new class extends Migration{
      */
     public function up(): void{
         Schema::table('profile_question_answers', function(Blueprint $table){
-            $table->foreign('profile_question_id')->references('id')->on('profile_questions')->onDelete('cascade');
+            $table->integer('order_position')->after('answer_text')->default(false);
         });
     }
 
@@ -19,7 +19,7 @@ return new class extends Migration{
      */
     public function down(): void{
         Schema::table('profile_question_answers', function(Blueprint $table){
-            $table->dropForeign(['profile_question_id']);
+            $table->dropColumn('order_position');
         });
     }
 };

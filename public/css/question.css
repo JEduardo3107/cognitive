@@ -82,12 +82,12 @@
     color: #fff;
 }
 
-.rounded-button:hover{
+.rounded-button:active{
     background: #054487;
     color: #fff;
 }
 
-.rounded-button--disabled:hover{
+.rounded-button--disabled:active{
     background: #f2fcffc3;
     color: #171717;
 }
@@ -182,7 +182,7 @@
     border: 2px solid #fff;
     color: white;
     font-weight: bold;
-    transition: all .15s ease-in-out;
+    transition: all .10s ease-in-out;
 }
 
 .content-container__select-option:hover{

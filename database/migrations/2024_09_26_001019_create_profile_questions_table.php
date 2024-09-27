@@ -9,7 +9,7 @@ return new class extends Migration{
      * Run the migrations.
      */
     public function up(): void{
-        Schema::create('profile_questions', function (Blueprint $table){
+        Schema::create('profile_questions', function(Blueprint $table){
             $table->uuid('id')->primary();
             $table->string('area', 100);
             $table->string('question_title', 600);

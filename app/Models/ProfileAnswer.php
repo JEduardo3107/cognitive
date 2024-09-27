@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class ProfileQuestion extends Model{
+class ProfileAnswer extends Model{
     use HasFactory, HasUuids;
 
-    protected $table = 'profile_questions';
+    protected $table = 'profile_answers';
     public $incrementing = false;
     protected $keyType = 'string';
     protected $primaryKey = 'id';
@@ -17,13 +17,7 @@ class ProfileQuestion extends Model{
 
     protected $fillable = [
         'id',
-        'area',
-        'question_title',
-        'is_enabled',
-        'order_position'
+        'user_id',
+        'user_question_answer_selected',
     ];
-
-    public function answers(){
-        return $this->hasMany(ProfileQuestionAnswer::class, 'profile_question_id', 'id')->orderBy('order_position', 'asc');
-    }
 }
