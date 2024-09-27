@@ -1,4 +1,4 @@
-@extends('layouts.base')
+@extends('layouts.guest')
 
 @section('pageTitle')
     Completa tu perfil

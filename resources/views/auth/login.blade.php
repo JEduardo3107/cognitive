@@ -1,47 +1,59 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@extends('layouts.guest')
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+@section('pageTitle')
+    Ingresar
+@endsection
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+@endpush
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+@section('content')
+    {{-- Session Status --}}
+    <x-auth-session-status :status="session('status')" />
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+    <form method="POST" action="{{ route('login') }}" class="page-container__form-container">
+        
+        <div class="form-container__form oneColumnFlexbox">
+            @csrf
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+            <div class="form-container__form-title unselectable">
+                Ingresar
+            </div>
+            {{--<img src="{{ asset('img/icon/logo-laravel.png') }}" class="form-container__icon-img-logo">--}}
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+            {{-- Email Address --}}
+            <div class="form-container__item oneColumnFlexbox">
+                <x-input-label for="email" :value="__('Correo electrónico')" />
+                <x-text-input id="email" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+                <x-input-error :messages="$errors->get('email')"/>
+            </div>
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
+            {{-- Password --}}
+            <div class="form-container__item oneColumnFlexbox">
+                <x-input-label for="password" :value="__('Contraseña')" />
+                <x-text-input id="password" type="password" name="password" required autocomplete="current-password" />
+                <x-input-error :messages="$errors->get('password')"/>
+            </div>
+
+            <div class="form-container__item form-container__item--btn oneColumnFlexbox">
+                <x-primary-button class="section-container__basic-button-t3">
+                    Iniciar sesión
+                </x-primary-button>
+                <a href="{{ route('register') }}" class="section-container__basic-button-t4">
+                    Crear cuenta
                 </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
+                    
+                {{--@if(Route::has('password.request'))
+                    <a class="form-container__password_r unselectable" href="{{ route('password.request') }}">
+                        Olvidé mi contraseña
+                    </a>
+                @endif--}}
+            </div>
         </div>
     </form>
-</x-guest-layout>
+@endsection
+
+@push('script')
+
+@endpush

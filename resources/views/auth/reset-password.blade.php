@@ -1,39 +1,59 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('password.store') }}">
-        @csrf
+@extends('layouts.guest')
 
-        <!-- Password Reset Token -->
-        <input type="hidden" name="token" value="{{ $request->route('token') }}">
+@section('pageTitle')
+    Registrarse
+@endsection
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+@endpush
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+@section('content')
+    <form method="POST" action="{{ route('password.store') }}" class="page-container__form-container centerFlexbox">
+        <div class="form-container__form oneColumnFlexbox">
+            @csrf
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+            <div class="form-container__form-title unselectable">
+                Cambiar contraseña
+            </div>
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                type="password"
-                                name="password_confirmation" required autocomplete="new-password" />
+            {{-- Password Reset Token --}}
+            <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
+            {{-- Email Address --}}
+            <div class="form-container__item oneColumnFlexbox">
+                <x-input-label for="email" :value="__('Correo electrónico')" />
+                <x-text-input id="email" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
+                <x-input-error :messages="$errors->get('email')" />
+            </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Reset Password') }}
-            </x-primary-button>
+            {{-- Password --}}
+            <div class="form-container__item oneColumnFlexbox">
+                <x-input-label for="password" :value="__('Contraseña')" />
+                <x-text-input id="password" type="password" name="password" required autocomplete="new-password" />
+                <x-input-error :messages="$errors->get('password')"/>
+            </div>
+
+            {{-- Confirm Password --}}
+            <div class="form-container__item oneColumnFlexbox">
+                <x-input-label for="password_confirmation" :value="__('Repetir contraseña')" />
+                <x-text-input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" />
+                <x-input-error :messages="$errors->get('password_confirmation')"/>
+            </div>
+
+            <div class="form-container__item form-container__item--btn oneColumnFlexbox">
+                <x-primary-button class="section-container__basic-button-t3">
+                    {{ __('Cambiar contraseña') }}
+                </x-primary-button>
+
+                <a class="form-container__password_r unselectable" href="{{ route('login') }}">
+                    Ingresar
+                </a>
+            </div>
         </div>
     </form>
-</x-guest-layout>
+@endsection
+
+@push('script')
+
+@endpush
