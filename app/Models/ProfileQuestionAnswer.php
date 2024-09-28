@@ -20,4 +20,14 @@ class ProfileQuestionAnswer extends Model{
         'answer_text',
         'is_enabled'
     ];
+
+    // Relación con ProfileAnswer
+    public function answersSelected(){
+        return $this->hasMany(ProfileAnswer::class, 'user_question_answer_selected', 'id');
+    }
+
+    // Método para contar las veces que una respuesta ha sido seleccionada
+    public function getCount(){
+        return $this->answersSelected()->count();
+    }
 }
