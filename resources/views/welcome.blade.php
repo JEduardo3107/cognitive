@@ -17,113 +17,58 @@
     {{-- Importar menu --}}
     <x-menu-component />
 
-    <section class="section-container">
+    @role('administrador')
+        <section class="section-container">
+            <span class="section-container__title-container">
+                Diagnóstico (Test)
+            </span>
+
+            <div class="section-container__selection-container">
+                <a href="{{ route('questions.index') }}" class="noDefaultStyle unselectable section-container__normal-section">
+                    <span class="section-container__normal-section-action">
+                        <img src="{{ asset('img/action/icon-1.png') }}" alt="Agregar" class="section-container__normal-section-action-icon">
+                    </span>
+                    <span class="section-container__normal-section-title">
+                        <p>
+                            Administrar preguntas
+                        </p>
+                    </span>
+                </a>
+        
+                <a href="{{ route('view-question.index') }}" class="noDefaultStyle unselectable section-container__normal-section">
+                    <span class="section-container__normal-section-action">
+                        <img src="{{ asset('img/action/icon-2.png') }}" alt="Agregar" class="section-container__normal-section-action-icon">
+                    </span>
+                    <span class="section-container__normal-section-title">
+                        Ver respuestas
+                    </span>
+                </a>
+            </div>
+        </section>
+    @endrole
+
+
+    
+
+
+
+    {{--<section class="section-container">
         <span class="section-container__title-container">
             Usuarios
         </span>
 
 
+    </section>--}}
 
+    
 
-
-
-
-
-    </section>
-
-    <section class="section-container">
-        <span class="section-container__title-container">
-            Estadisticas
-        </span>
-
-
-
-
-
-    </section>
-
-    <section class="section-container">
-        <span class="section-container__title-container">
-            Test principal
-        </span>
-
-
-
-
-
-    </section>
-
-    <section class="section-container">
+    {{--<section class="section-container">
         <span class="section-container__title-container">
             Actividades
         </span>
 
 
-
-
-
-    </section>
-
-    @for($i = 0; $i < 10; $i++)
-        <section class="section-container">
-            <span class="section-container__title-container">
-                Pregunta: {{ $i }}
-            </span>
-
-
-            {{--<script>
-
-                let canvas = document.getElementById('myChart');
-                let ctx = canvas.getContext('2d');
-    
-                let etiquetas = [];
-                let valores = [];
-                let colores = [];
-    
-                // arr.push('Fourth item');
-                let etiqueta = "", valor = "", color = "";
-    
-                @foreach ($rutas as $ruta)
-                    etiqueta = "{{ $ruta->nombre }}";
-                    valor = "{{ $ruta->obtenerLitrosTotales() }}";
-                    color = "{{ $ruta->color }}";
-                    etiquetas.push(etiqueta.toString());
-                    valores.push(valor.toString());
-                    colores.push(color.toString());
-                @endforeach
-    
-                const data = {
-                labels: etiquetas,
-                datasets: [{
-                    label: "Respuestas",
-                    data: valores,
-                    backgroundColor: colores
-                }]
-                };
-    
-                let options = {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    legend: {
-                    display: false
-                    }
-                };
-    
-                let myChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: data,
-                    options: options
-                });
-    
-                let canvasContainer = document.getElementById('section-container__canva-container');
-    
-                new ResizeObserver(function() {
-                    myChart.resize();
-                }).observe(canvasContainer);
-            </script>--}}
-        </section>
-        
-    @endfor
+    </section>--}}
 
 
 @endsection

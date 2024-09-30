@@ -282,3 +282,94 @@ body{
     background: #41B1FF;
     color: #FFFFFF;
 }
+
+.danger-zone-container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: .75rem;
+    box-sizing: border-box;
+    padding: 1rem .5rem;
+}
+
+.danger-zone-container span{
+    font-weight: bold;
+    color: #d93636;
+    text-align: left;
+}
+
+.danger-zone-container__confirm-input{
+    background: transparent;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 10px;
+    height: 36px;
+    border: 1px solid #c4c4c4;
+    border-radius: 2px;
+    color: #545454;
+}
+
+.danger-zone-container__confirm-input:focus{
+    border-color: #41b1ff;
+}
+
+/* CSS */
+.button-6{
+    align-items: center;
+    background-color: #fff;
+    border: 2px solid #d93636;
+    box-sizing: border-box;
+    color: #e52a2a;
+    cursor: pointer;
+    display: inline-flex;
+    fill: #e52a2a;
+    font-size: 16px;
+    font-weight: 600;
+    height: 48px;
+    justify-content: center;
+    letter-spacing: -.8px;
+    line-height: 24px;
+    min-width: 100px;
+    outline: 0;
+    padding: 0 17px;
+    text-align: center;
+    text-decoration: none;
+    transition: all .3s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    border-radius: 8px;
+  }
+  
+  .button-6:focus{
+    color: #171e29;
+  }
+  
+  .button-6:hover{
+    border-color: #d93636;
+    color: #e52a2a;
+    fill: #e52a2a;
+    background: #ff828247;
+  }
+  
+  .button-6:active {
+    border-color: #d93636;
+    color: #e52a2a;
+    fill: #e52a2a;
+    background: #ff828247;
+  }
+  
+  .button-6:disabled{
+      background: #eff2f5;
+      color: #8d8d90;
+      border-color: #8d8d90;
+      font-weight: 400;
+  }
+  
+  @media (min-width: 768px){
+    .button-6 {
+      min-width: 170px;
+    }
+  }

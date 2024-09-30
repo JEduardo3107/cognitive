@@ -19,6 +19,10 @@
     margin-top: 5rem;
 }
 
+.section-container:last-child{
+    margin-bottom: 2rem;
+}
+
 .section-container__title-container{
     color: #252221;
     font-size: 14px;

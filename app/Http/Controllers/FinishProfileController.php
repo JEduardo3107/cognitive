@@ -6,6 +6,7 @@ use App\Models\ProfileQuestion;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\ProfileAnswer;
+use App\Models\ProfileQuestionAnswer;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
@@ -13,23 +14,29 @@ class FinishProfileController extends Controller{
     public function index(){
         // Obtener el usuario autenticado
         $user = Auth::user();
-
         $currentUser = User::findOrFail(Auth::id());
-
+    
         if($currentUser->hasRole('administrador')){
             return redirect()->route('home.index');
         }
-
+    
         // Verifica si el perfil está completo
         if($user->profile_completed){
             return redirect()->route('home.index');
         }
-
+    
+        // Obtener IDs de preguntas respondidas por el usuario
+        $answeredQuestionIds = ProfileAnswer::where('user_id', $user->id)
+            ->pluck('question_id'); // Cambia 'question_id' al nombre correcto de la columna que relaciona la respuesta con la pregunta
+    
+        // Obtener preguntas que están habilitadas, tienen respuestas y no han sido respondidas
         $questions = ProfileQuestion::with(['answers'])
-        ->where('is_enabled', true)
-        ->orderBy('order_position')
-        ->get()->groupBy('area');
-
+            ->where('is_enabled', true)
+            ->whereHas('answers') // Solo preguntas que tienen respuestas
+            ->whereNotIn('id', $answeredQuestionIds) // Excluir preguntas respondidas
+            ->orderBy('order_position')
+            ->get()->groupBy('area');
+    
         return view('pages.complete-profile', [
             'questions' => $questions
         ]);
@@ -59,20 +66,22 @@ class FinishProfileController extends Controller{
 
             // Insertar las respuestas en la base de datos
             foreach ($validatedData as $key => $value) {
+                $currentAnswer = ProfileQuestionAnswer::findOrFail($value);
+
                 ProfileAnswer::create([
                     'user_id' => $userId,
                     'user_question_answer_selected' => $value,
+                    'question_id' => $currentAnswer->question->id
                 ]);
             }
 
             // Actualizar el campo 'profile_completed' del usuario
-            $currentUser = User::findOrFail($userId);
+           /* $currentUser = User::findOrFail($userId);
             $currentUser->profile_completed = true;
-            $currentUser->save();
+            $currentUser->save();*/
 
             // Si todo fue bien, hacer commit
             DB::commit();
-
 
             return redirect()->route('home.index')->with('notification', [
                 'type' => 'success',

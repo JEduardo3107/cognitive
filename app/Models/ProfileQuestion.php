@@ -17,13 +17,15 @@ class ProfileQuestion extends Model{
 
     protected $fillable = [
         'id',
-        'area',
+        'area_id',
         'question_title',
         'is_enabled',
         'order_position'
     ];
 
     public function answers(){
-        return $this->hasMany(ProfileQuestionAnswer::class, 'profile_question_id', 'id')->orderBy('order_position', 'asc');
+        return $this->hasMany(ProfileQuestionAnswer::class, 'profile_question_id', 'id')
+                    ->where('is_enabled', true)
+                    ->orderBy('order_position', 'asc');
     }
 }

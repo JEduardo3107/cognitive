@@ -18,88 +18,92 @@
     <x-menu-component />
 
     @foreach($questions as $questionSection)
-    <section class="section-container">
-        <span class="section-container__title-container">
-            {{ $questionSection[0]->area }}
-        </span>
+        <section class="section-container">
+            <span class="section-container__title-container">
+                {{ $questionSection[0]->area }}
+            </span>
 
-        @foreach($questionSection as $currentQuestion)
-            @php
-                $dynamicId = generateRandomId(10);
-            @endphp
-            <div class="classic-section__question">
-                <div class="classic-section__question-title">
-                    {{ $currentQuestion->question_title }}
-                </div>
-
+            @foreach($questionSection as $currentQuestion)
                 @php
+                    $dynamicId = generateRandomId(10);
                     $answers = $currentQuestion->answers;
+                    $hasAnswers = $answers->sum('answers_selected_count') > 0;
                 @endphp
+                <div class="classic-section__question">
+                    <div class="classic-section__question-title">
+                        {{ $currentQuestion->question_title }}
+                    </div>
 
-                <div class="classic-section__question-canvas">
-                    <canvas id="{{ $dynamicId }}" class="canva"></canvas>
-                </div>
-
-                <div class="classic-section__question-counter">
-                    @foreach($answers as $currentAnswer)
-                        <div class="classic-section__question-counter-line">
-                            <span>{{ $currentAnswer->answer_text }}: </span>{{ $currentAnswer->answers_selected_count }}
+                    @if($hasAnswers)
+                        <div class="classic-section__question-canvas">
+                            <canvas id="{{ $dynamicId }}" class="canva"></canvas>
                         </div>
-                    @endforeach
-                </div>
 
-                <script>
-                    document.addEventListener('DOMContentLoaded', function(){
-                        let canvas = document.getElementById('{{ $dynamicId }}');
-                        
-                        if(canvas){
-                            let ctx = canvas.getContext('2d');
-
-                            let etiquetas = [];
-                            let valores = [];
-
+                        <div class="classic-section__question-counter">
                             @foreach($answers as $currentAnswer)
-                                etiquetas.push("{{ $currentAnswer->answer_text }}");
-                                valores.push("{{ $currentAnswer->answers_selected_count }}");
+                                <div class="classic-section__question-counter-line">
+                                    <span>{{ $currentAnswer->answer_text }}: </span>{{ $currentAnswer->answers_selected_count }}
+                                </div>
                             @endforeach
+                        </div>
 
-                            const data = {
-                                labels: etiquetas,
-                                datasets: [{
-                                    label: "Respuestas",
-                                    data: valores
-                                }]
-                            };
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function(){
+                                let canvas = document.getElementById('{{ $dynamicId }}');
+                                
+                                if(canvas){
+                                    let ctx = canvas.getContext('2d');
 
-                            let options = {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                legend: {
-                                    display: true
-                                },
-                                plugins: {
-                                    legend: {
-                                        display: false
-                                    }
+                                    let etiquetas = [];
+                                    let valores = [];
+
+                                    @foreach($answers as $currentAnswer)
+                                        etiquetas.push("{{ $currentAnswer->answer_text }}");
+                                        valores.push("{{ $currentAnswer->answers_selected_count }}");
+                                    @endforeach
+
+                                    const data = {
+                                        labels: etiquetas,
+                                        datasets: [{
+                                            label: "Respuestas",
+                                            data: valores
+                                        }]
+                                    };
+
+                                    let options = {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        legend: {
+                                            display: true
+                                        },
+                                        plugins: {
+                                            legend: {
+                                                display: false
+                                            }
+                                        }
+                                    };
+
+                                    let myChart = new Chart(ctx, {
+                                        type: 'pie',
+                                        data: data,
+                                        options: options
+                                    });
+                                } else {
+                                    console.error('No se pudo encontrar el canvas con el ID: {{ $dynamicId }}');
                                 }
-                            };
-
-                            let myChart = new Chart(ctx, {
-                                type: 'pie',
-                                data: data,
-                                options: options
                             });
-                        } else {
-                            console.error('No se pudo encontrar el canvas con el ID: {{ $dynamicId }}');
-                        }
-                    });
-                </script>
-            </div>
-        @endforeach
-    </section>
-@endforeach
-
-
+                        </script>
+                    @else
+                        <div class="classic-section__no-data">
+                            <span>
+                                Esta pregunta no tiene respuestas registradas
+                            </span>
+                        </div>
+                    @endif
+                </div>
+            @endforeach
+        </section>
+    @endforeach
 
 @endsection
 

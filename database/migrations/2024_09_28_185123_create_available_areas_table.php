@@ -9,12 +9,10 @@ return new class extends Migration{
      * Run the migrations.
      */
     public function up(): void{
-        Schema::create('profile_questions', function(Blueprint $table){
+        Schema::create('available_areas', function(Blueprint $table){
             $table->uuid('id')->primary();
-            $table->uuid('area_id');
-            $table->string('question_title', 600);
+            $table->string('area_name');
             $table->boolean('is_enabled')->default(true);
-            $table->integer('order_position');
             $table->timestamps();
             $table->engine = 'innoDB';
         });
@@ -24,6 +22,6 @@ return new class extends Migration{
      * Reverse the migrations.
      */
     public function down(): void{
-        Schema::dropIfExists('profile_questions');
+        Schema::dropIfExists('available_areas');
     }
 };
