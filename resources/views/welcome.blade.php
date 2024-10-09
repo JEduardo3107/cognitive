@@ -6,11 +6,11 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/containers.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/mainDashboard.css') }}">
-@endpush
+    @role('administrador')
+        <link rel="stylesheet" href="{{ asset('css/mainDashboard.css') }}">
+    @endrole
 
-@push('headerScript')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ asset('css/streakBanner.css') }}">
 @endpush
 
 @section('content')
@@ -47,11 +47,6 @@
         </section>
     @endrole
 
-
-    
-
-
-
     {{--<section class="section-container">
         <span class="section-container__title-container">
             Usuarios
@@ -60,17 +55,46 @@
 
     </section>--}}
 
-    
+    @hasNotRole('administrador')
+        <section class="section-container">
+            <span class="section-container__title-container">
+                Actividades
+            </span>
 
-    {{--<section class="section-container">
-        <span class="section-container__title-container">
-            Actividades
-        </span>
+            <div class="streak-container">
+                <div class="streak-container__icon-container">
+                    <img src="{{ asset('img/icon/fire-type-streak-2.png') }}" alt="Icono de racha" class="streak-container__icon">
+                </div>
+
+                <div class="streak-container__details-container">
+                    <div class="streak-container__details-title">
+                        Actividades semanales
+                    </div>
+
+                    <div class="streak-container__details-content">
+                        @if($streakCount >= $daysRequired)
+                            <p>
+                                <span>¡Felicidades!</span> Hoy completas las actividades semanales.
+                            </p>
+                        @else
+                            <p>
+                                <span>¡Sigue así!</span> Llevas {{ $streakCount }} {{ $streakCount === 1 ? 'día' : 'días' }} realizando actividades.
+                            </p>
+                        @endif
+                    </div>
+                </div>
+            </div>
 
 
-    </section>--}}
 
 
+
+
+
+
+
+        </section>
+    @endNotRole
 @endsection
 
 @push('script')

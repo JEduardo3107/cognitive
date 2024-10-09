@@ -6,29 +6,48 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\ProfileAnswer;
 use App\Models\ProfileQuestion;
+use App\Models\LoginStreak;
+use Carbon\Carbon;
 
 class HomeController extends Controller{
     public function index(){
         // Obtener el usuario autenticado
         $user = Auth::user();
-        $currentUser = User::findOrFail(Auth::id());
-    
-        if($currentUser->hasRole('administrador')){
-            return view('welcome');
-        }
-    
-        $answeredQuestionIds = ProfileAnswer::where('user_id', $user->id)
+        $streakCount = 0;
+        $daysRequired = env('APP_DAYS_REQUIRED_TO_STREAK', 2);
+
+        if(!$user->hasRole('administrador')){
+            $answeredQuestionIds = ProfileAnswer::where('user_id', $user->id)
             ->pluck('question_id');
     
-        $pendingQuestionsCount = ProfileQuestion::where('is_enabled', true)
-            ->whereHas('answers')
-            ->whereNotIn('id', $answeredQuestionIds)
-            ->count();
+            $pendingQuestionsCount = ProfileQuestion::where('is_enabled', true)
+                ->whereHas('answers')
+                ->whereNotIn('id', $answeredQuestionIds)
+                ->count();
 
-        if ($pendingQuestionsCount > 0) {
-            return redirect()->route('finishProfile.index');
+            if($pendingQuestionsCount > 0){
+                return redirect()->route('finishProfile.index');
+            }
+
+            $today = Carbon::today();
+            $selectedDay = env('APP_DAY_RESET_STREAK', 'Friday');
+
+            // Obtener el día de la semana en forma de número (1 = domingo, 7 = sábado)
+            $dayOfWeek = Carbon::parse($selectedDay)->dayOfWeek;
+
+            $nextSelectedDay = $today->isToday() && $today->dayOfWeek === $dayOfWeek 
+                ? $today->toDateString() 
+                : $today->next($selectedDay)->toDateString();
+
+            $lastSelectedDay = $today->previous($selectedDay)->toDateString();
+            $streakCount = LoginStreak::where('user_id', $user->id)
+                            ->whereBetween('day_login', [$lastSelectedDay, $nextSelectedDay])
+                            ->count();
         }
     
-        return view('welcome');
+        return view('welcome', [
+            'streakCount' => $streakCount,
+            'daysRequired' => $daysRequired
+        ]);
     }
 }

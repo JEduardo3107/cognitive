@@ -14,16 +14,15 @@ class FinishProfileController extends Controller{
     public function index(){
         // Obtener el usuario autenticado
         $user = Auth::user();
-        $currentUser = User::findOrFail(Auth::id());
-    
-        if($currentUser->hasRole('administrador')){
+
+        if($user->hasRole('administrador')){
             return redirect()->route('home.index');
         }
     
-        // Verifica si el perfil está completo
-        if($user->profile_completed){
+        // Verifica si el perfil está completo (control obsoleto)
+        /*if($user->profile_completed){
             return redirect()->route('home.index');
-        }
+        }*/
     
         // Obtener IDs de preguntas respondidas por el usuario
         $answeredQuestionIds = ProfileAnswer::where('user_id', $user->id)
@@ -36,6 +35,11 @@ class FinishProfileController extends Controller{
             ->whereNotIn('id', $answeredQuestionIds) // Excluir preguntas respondidas
             ->orderBy('order_position')
             ->get()->groupBy('area');
+
+        // Proteccion para evitar que se muestre la vista si no hay preguntas
+        if($questions->isEmpty()){
+            return redirect()->route('home.index');
+        }
     
         return view('pages.complete-profile', [
             'questions' => $questions

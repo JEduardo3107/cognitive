@@ -9,7 +9,7 @@ use App\Http\Controllers\QuestionsController;
 use Illuminate\Support\Facades\Route;
 
 // Secciones estaticas del footer
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'checkLoginStreak'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
     
     Route::get('/finish-profile', [FinishProfileController::class, 'index'])->name('finishProfile.index');
@@ -47,12 +47,12 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/delete-answer/{answer:id}', [AnswerController::class, 'destroy'])->name('answer.destroy');
 });
-
+/*
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');*/
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'checkLoginStreak'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

@@ -1,7 +1,7 @@
 <div class="menu unselectable">
-    <span class="menu__logo-text">
+    <a href="{{ route('home.index') }}" class="noDefaultStyle menu__logo-text">
         Pinceles Mentales
-    </span>
+    </a>
     
     <div class="menu__activador" id="menu__activador">
         <p>{{ Auth::user()->name }}</p>

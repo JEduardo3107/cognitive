@@ -38,11 +38,15 @@ class User extends Authenticatable{
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
+    protected function casts(): array{
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
+
+     // Relación con LoginStreak
+     public function loginStreaks(){
+         return $this->hasMany(LoginStreak::class);
+     }
 }
