@@ -48,9 +48,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/delete-answer/{answer:id}', [AnswerController::class, 'destroy'])->name('answer.destroy');
 });
 
-
-
-
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

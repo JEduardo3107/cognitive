@@ -5,8 +5,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('pageTitle', 'Cognitive')</title>
-    <link rel="icon" type="image/png" href="{{ asset('img/icon/icon.png') }}">
+    <title>@yield('pageTitle', 'Pinceles mentales')</title>
+    <link rel="icon" type="image/png" href="{{ asset('img/icon/Icon.png') }}">
     <link rel="stylesheet" href="{{ asset('css/page.css') }}">
    {{-- <link rel="stylesheet" href="{{ asset('css/component/button.css') }}">
     <link rel="stylesheet" href="{{ asset('css/main/footer.css') }}">--}}

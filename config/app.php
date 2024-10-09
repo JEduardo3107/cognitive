@@ -13,7 +13,9 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Pinceles mentales'),
+
+    'creator_name' => env('APP_CREATOR_NAME', 'Dpto. de Gerontología'),
 
     /*
     |--------------------------------------------------------------------------

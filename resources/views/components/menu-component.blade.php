@@ -1,6 +1,6 @@
 <div class="menu unselectable">
     <span class="menu__logo-text">
-        Test
+        Pinceles Mentales
     </span>
     
     <div class="menu__activador" id="menu__activador">

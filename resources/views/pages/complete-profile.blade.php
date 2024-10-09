@@ -9,6 +9,48 @@
 @endpush
 
 @section('content')
+    <div class="preview-card-container" id="preview-card">
+        <div class="preview-card-container__content">
+            <div class="preview-card-container__image-container">
+                <img src="{{ asset('img/banner/Banner.jpeg') }}" alt="Ilustración de perfil" class="preview-card-container__image">
+            </div>
+
+            <span class="preview-card-container__author-container">
+                Creado por {{ config('app.creator_name') }}
+            </span>
+            
+            <div class="preview-card-container__instructions-container">
+                <p>
+                    A continuación se te presentarán una serie de preguntas que te ayudarán a completar tu perfil.
+                </p>
+            </div>
+
+            <div class="preview-card-container__time-container">
+                <span class="preview-card-container__time-container__title">
+                    Tiempo estimado:
+                </span>
+                <span class="preview-card-container__time-container__time">
+                    @php
+                        $questionsCounter = 0;
+
+                        foreach($questions as $questionGroup){
+                            foreach($questionGroup as $currentQuestion){
+                                $questionsCounter++;
+                            }
+                        }
+                    @endphp
+                    
+                    {{ getEstimatedTime($questionsCounter) }}
+                </span>
+            </div>
+        </div>
+        <div class="preview-card-container__actions-container">
+            <button class="noDefaultStyle preview-card-container__action" id="preview-card__button">
+                Comenzar
+            </button>
+        </div>
+    </div>
+
     <form action="{{ route('finishProfile.store') }}" method="post" class="card-container unselectable" id="form-to-question-profile">
         @csrf
         <div class="progress-container">
@@ -60,6 +102,8 @@
 @endsection
 
 @push('script')
+    <script src="{{ asset('js/preview-card.js') }}">
+    </script>
     <script src="{{ asset('js/question.js') }}">
     </script>
 @endpush

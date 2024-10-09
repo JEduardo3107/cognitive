@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('pageTitle')
-    Cognitive
+    Pinceles mentales
 @endsection
 
 @push('styles')

@@ -38,9 +38,9 @@
 .menu__logo-text{
     width: 100%;
     text-align: left;
-    color: var(--colorBlue);
+    color: #11769f96;
+    font-size: 15px;
     font-weight: bold;
-    text-transform: uppercase;
 }
 
 .menu__activador{
@@ -117,6 +117,7 @@
     cursor: pointer;
     width: 100%;
     height: 100%;
+    color: #b11c1c;
 }
 
 .menu__activador--icono::before,
