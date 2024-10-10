@@ -10,7 +10,10 @@
         <link rel="stylesheet" href="{{ asset('css/mainDashboard.css') }}">
     @endrole
 
-    <link rel="stylesheet" href="{{ asset('css/streakBanner.css') }}">
+    @hasNotRole('administrador')
+        <link rel="stylesheet" href="{{ asset('css/streakBanner.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/activities.css') }}">
+    @endNotRole
 @endpush
 
 @section('content')
@@ -68,7 +71,7 @@
 
                 <div class="streak-container__details-container">
                     <div class="streak-container__details-title">
-                        Actividades semanales
+                        Actividades semanales ({{ $streakCount }}/{{ $daysRequired }})
                     </div>
 
                     <div class="streak-container__details-content">
@@ -87,7 +90,33 @@
 
 
 
+            <div class="activities-container">
+                @foreach ($activities as $index => $currentActivity)
 
+                    <a href="{{ route('game.index', ['game' => $currentActivity->id]) }}" class="noDefaultStyle activity-container {{ ($index == 0) ? 'activity--finish' : '' }}">
+                        <span class="activity-container__status">
+                        </span>
+                        <div class="activity-container__content {{ ($index == 0) ? 'activity-container--current' : '' }}">
+                            <div class="activity-container__description-container">
+                                <div class="activity-container__description-title">
+                                    <p>
+                                        {{ $currentActivity->name }}
+                                    </p>
+                                </div>
+                                <div class="activity-container__description-area">
+                                    <p>
+                                        {{ $currentActivity->activityArea->name }}
+                                    </p>
+                                </div>
+                            </div>
+                            {{-- definir color --}}
+                            <div class="activity-container__image-container" style="background: {{ $currentActivity->activityArea->color }};">
+                                <img src="{{ asset('img/games_icon/1.png') }}" alt="Icono de actividad" class="activity-container__image">
+                            </div>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
 
 
 

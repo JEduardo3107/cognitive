@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\ProfileAnswer;
+use App\Models\ActivityArea;
+use App\Models\AvailableActivity;
 use App\Models\ProfileQuestion;
 use App\Models\LoginStreak;
 use Carbon\Carbon;
@@ -15,8 +17,11 @@ class HomeController extends Controller{
         $user = Auth::user();
         $streakCount = 0;
         $daysRequired = env('APP_DAYS_REQUIRED_TO_STREAK', 2);
-
+        $activities = [];
+        
         if(!$user->hasRole('administrador')){
+            $activities = AvailableActivity::with('activityArea')->get();
+
             $answeredQuestionIds = ProfileAnswer::where('user_id', $user->id)
             ->pluck('question_id');
     
@@ -47,7 +52,8 @@ class HomeController extends Controller{
     
         return view('welcome', [
             'streakCount' => $streakCount,
-            'daysRequired' => $daysRequired
+            'daysRequired' => $daysRequired,
+            'activities' => $activities
         ]);
     }
 }
