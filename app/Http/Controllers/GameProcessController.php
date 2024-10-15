@@ -142,8 +142,6 @@ class GameProcessController extends Controller{
             return redirect()->route('index.game2', ['sessionid' => $sessionId]);
 
            // DB::commit();
-
-
         }catch(Exception $e){
             // Si algo falla, hacer rollback
            // DB::rollback();

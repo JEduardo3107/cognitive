@@ -48,6 +48,8 @@ class GameResponseController extends Controller{
 
         // Inicializar un array vacío para los resultados de coincidencia
         $results = [];
+        $aciertos = 0;
+        $totalAcierto = 4;
 
         // Iterar sobre los números requeridos y las selecciones del usuario
         for ($i = 1; $i <= 4; $i++) {
@@ -56,6 +58,10 @@ class GameResponseController extends Controller{
 
             // Calcular el porcentaje de coincidencia
             $percentage = $this->calculatePercentage($number, $userSelection);
+
+            if($percentage == 100){
+                $aciertos++;
+            }
 
             // Almacenar el resultado
             $results[] = [
@@ -71,8 +77,18 @@ class GameResponseController extends Controller{
         $seconds = $timeInSeconds % 60;
         $formattedTime = sprintf('%02d:%02d', $minutes, $seconds);
 
+        if($aciertos < 1){
+            $message = "¡No te rindas! Cada error es una oportunidad para aprender.";
+        }elseif($aciertos < 2){
+            $message = "¡Buen intento! Estás en el camino correcto, sigue practicando.";
+        }elseif($aciertos < 3){
+            $message = "¡Vas bien! Un poco más de esfuerzo y lo lograrás.";
+        }else{
+            $message = "¡Excelente trabajo! Has hecho un gran esfuerzo.";
+        }
 
-        return view('responses.memory.game-1', compact('results', 'formattedTime'));
+
+        return view('responses.memory.game-1', compact('results', 'formattedTime', 'aciertos', 'totalAcierto', 'message'));
     }
 
     // Método para calcular el porcentaje de coincidencia
