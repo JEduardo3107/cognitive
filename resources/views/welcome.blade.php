@@ -88,8 +88,6 @@
                 </div>
             </div>
 
-
-
             <div class="activities-container">
                 @foreach ($activities as $index => $currentActivity)
 
@@ -117,13 +115,18 @@
                     </a>
                 @endforeach
             </div>
-
-
-
-
-
         </section>
     @endNotRole
+
+
+
+        
+
+
+
+
+
+
 @endsection
 
 @push('script')

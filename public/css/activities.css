@@ -64,7 +64,7 @@
     width: 100%;
     height: auto;
     box-sizing: border-box;
-    padding: .5rem;
+    padding: .25rem;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -112,13 +112,13 @@
     color: #999a9f;
     font-size: 12px;
 }
-
+/*
 .activity-container__description-title p,
 .activity-container__description-area p{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
+}*/
 
 .activity--finish .activity-container__status{
     background: #208178;

@@ -1,0 +1,71 @@
+.game-container__lineal-cards-container{
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: .5rem;
+    background: #ffddb1b8;
+    box-sizing: border-box;
+    padding: 1rem;
+    border-radius: .5rem;
+}
+
+.game-container__lineal-card{
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    background: white;
+    box-sizing: border-box;
+    padding: .5rem 1rem;
+    border-radius: .325rem;
+}
+
+.game-container__lineal-card-normal-word{
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    font-weight: bold;
+    font-size: 17px;
+    color: #5f3b04;
+}
+
+.game-container__lineal-card-selection-box{
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    font-size: 14px;
+    box-sizing: border-box;
+    padding: 0 .25rem;
+    color: white;
+}
+
+.game-container__lineal-card-selection-element{
+    box-sizing: border-box;
+    padding: .125rem;
+    border: 1px solid #c1883d;
+    background: #fbe0bc24;
+    color: #d37612;
+    border-radius: .25rem;
+}
+
+.game-container__lineal-card-selection-true,
+.game-container__lineal-card-selection-false{
+    color: #03c148;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.game-container__lineal-card-selection-false{
+    color: #e71515;
+}

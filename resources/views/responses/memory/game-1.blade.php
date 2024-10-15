@@ -1,0 +1,1 @@
+resultados aqui {{ $formattedTime }} {{ var_dump($results) }}

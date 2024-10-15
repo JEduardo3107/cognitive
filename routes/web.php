@@ -7,6 +7,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfileQuestionController;
 use App\Http\Controllers\QuestionsController;
 use App\Http\Controllers\GameManagerController;
+use App\Http\Controllers\GameProcessController;
+use App\Http\Controllers\GameResponseController;
 use Illuminate\Support\Facades\Route;
 
 // Secciones estaticas del footer
@@ -62,5 +64,17 @@ Route::middleware(['auth', 'checkLoginStreak'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/play/{game:id}', [GameManagerController::class, 'index'])->name('game.index');
 });
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/process/1/', [GameProcessController::class, 'store1'])->name('gamestore.game1');
+    Route::post('/process/2/', [GameProcessController::class, 'store2'])->name('gamestore.game2');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/response/1/{sessionid}', [GameResponseController::class, 'index1'])->name('index.game1');
+    Route::get('/response/2/{sessionid}', [GameResponseController::class, 'index2'])->name('index.game2');
+});
+
 
 require __DIR__.'/auth.php';

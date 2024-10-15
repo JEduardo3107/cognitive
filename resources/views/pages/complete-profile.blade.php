@@ -21,7 +21,7 @@
             
             <div class="preview-card-container__instructions-container">
                 <p>
-                    A continuación se te presentarán una serie de preguntas que te ayudarán a completar tu perfil.
+                    A continuación se te presentará una serie de preguntas que te ayudarán a completar tu perfil.
                 </p>
             </div>
 
