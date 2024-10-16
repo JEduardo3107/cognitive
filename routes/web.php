@@ -69,11 +69,13 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::post('/process/1/', [GameProcessController::class, 'store1'])->name('gamestore.game1');
     Route::post('/process/2/', [GameProcessController::class, 'store2'])->name('gamestore.game2');
+    Route::post('/process/3/', [GameProcessController::class, 'store3'])->name('gamestore.game3');
 });
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/response/1/{sessionid}', [GameResponseController::class, 'index1'])->name('index.game1');
     Route::get('/response/2/{sessionid}', [GameResponseController::class, 'index2'])->name('index.game2');
+    Route::get('/response/3/{sessionid}', [GameResponseController::class, 'index3'])->name('index.game3');
 });
 
 

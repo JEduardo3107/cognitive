@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Games\Game1Setting;
 use App\Models\Result\Game1Result;
 use App\Models\Result\Game2Result;
+use App\Models\Result\Game3Result;
 use Illuminate\Support\Str;
 use Exception;
 
@@ -153,4 +154,90 @@ class GameProcessController extends Controller{
         }
     }
 
+    public function store3(Request $request){
+        $rules = [
+            'values' => 'required|string', // Validamos que 'values' sea un JSON válido
+            'time' => 'required|integer|min:0', // Validamos que el tiempo sea un número entero positivo
+        ];
+
+        foreach ($request->all() as $key => $value) {
+            if (strpos($key, 'user_sequence_') !== false) {
+                // Reglas para cada campo 'user_sequence_*' que esté presente
+                $rules[$key] = 'required|integer';
+            }
+            if (strpos($key, 'required_sequence_') !== false) {
+                // Reglas para cada campo 'required_sequence_*' que esté presente
+                $rules[$key] = 'required|integer';
+            }
+        }
+
+        try{
+            // Validar los datos
+            $validatedData = $request->validate($rules);
+
+            // Inicializar el array donde se almacenarán las secuencias
+            $sequences = [];
+
+            // Iniciar una transacción
+            DB::beginTransaction();
+
+            // GENERAR UN UUID PARA LA SESION
+            $sessionId = Str::uuid();
+
+            // Obtener el user_id del usuario autenticado
+            $userId = Auth::user()->id;
+
+            $timeRequired = $request->input('time');
+
+            if(!$timeRequired){
+                $timeRequired = 0;
+            }
+
+            // Recorrer todos los campos enviados en la solicitud
+            foreach ($request->all() as $key => $value) {
+                if (strpos($key, 'user_sequence_') !== false) {
+                    // Obtener el índice actual del número de secuencia
+                    $index = str_replace('user_sequence_', '', $key);
+
+                    // Obtener el número ingresado por el usuario y el número requerido
+                    $userSequence = $request->input("user_sequence_$index");
+                    $requiredSequence = $request->input("required_sequence_$index");
+
+                    // Comparar los valores para determinar si la secuencia es válida
+                    $isValid = ($userSequence == $requiredSequence);
+
+                    // Añadir al array de secuencias
+                    $sequences[] = [
+                        'original' => $requiredSequence,  // Número requerido
+                        'seleccion_usuario' => $userSequence,  // Número ingresado por el usuario
+                        'secuencia_valida' => $isValid  // Si la secuencia es correcta o no
+                    ];
+                }
+            }
+
+            foreach($sequences as $key => $sequenceResult){
+                Game3Result::create([
+                    'user_id' => $userId,
+                    'session_id' => $sessionId,
+                    'time' => $timeRequired,
+
+                    'number_required' => $sequenceResult['original'],
+                    'user_input' => $sequenceResult['seleccion_usuario'],
+                    'is_valid' => $sequenceResult['secuencia_valida'],
+                    'sequence_data' => $request->input('values'),
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->route('index.game3', ['sessionid' => $sessionId]);
+
+        }catch(Exception $e){
+            DB::rollback();
+            return redirect()->route('home.index')->with('notification', [
+                'type' => 'error',
+                'message' => 'Ocurrió un error inesperado.'
+            ]);
+        }
+    }
 }

@@ -1,0 +1,124 @@
+.game-container__sequence-container{
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: .75rem;
+    background: #ffca877d;
+    box-sizing: border-box;
+    padding: .75rem;
+    border-radius: .5rem;
+}
+
+.game-container__sequence-item{
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    background: #e9a044;
+    border-radius: .25rem;
+    box-sizing: border-box;
+    padding: .325rem .625rem;
+    font-weight: bold;
+    color: #ffffff;
+    font-size: 18px;
+}
+
+.game-container__sequence-item-input{
+    width: auto;
+    max-width: 90px;
+    padding: .325rem .625rem;
+    box-sizing: border-box;
+    border: 2px solid #ff9817;
+    background: #fffefa;
+    border-radius: .25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .3s linear;
+}
+
+.game-container__sequence-item-input::placeholder{
+    text-align: center;
+}
+
+.game-container__sequence-item-input:focus{
+    border-color: #16abe5;
+    background: #ddfff7;
+    animation: fadeIn .6s linear infinite alternate;
+    outline: none;
+}
+
+@keyframes fadeIn{
+    from{
+        border-color: #16abe5;
+    }
+    to{
+        border-color: #16aae54a;
+    }
+}
+
+.game-container__sequence-card,
+.game-container__sequence-card--true,
+.game-container__sequence-card--false,
+.game-container__sequence-card--original,
+.game-container__sequence-card--arrow{
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    background: #e9a044;
+    border-radius: .25rem;
+    box-sizing: border-box;
+    padding: .325rem .625rem;
+    font-weight: bold;
+    color: #ffffff;
+    font-size: 18px;
+}
+
+.game-container__sequence-card--true{
+    background: #09de73;
+}
+
+.game-container__sequence-card--false{
+    background: #de0909;
+}
+
+.game-container__sequence-card--original{
+    background: #115deb;
+}
+
+.game-container__sequence-card--arrow{
+    background: #de8a20;
+    background: transparent;
+    color: #905204;
+}
+
+.game-container__sequence-responses-container{
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: .75rem;
+    background: #ffca877d;
+    box-sizing: border-box;
+    padding: .75rem;
+    border-radius: .5rem;
+    margin-top: .5rem;
+}
+
+.game-container__sequence-responses-row{
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: .125rem;
+}

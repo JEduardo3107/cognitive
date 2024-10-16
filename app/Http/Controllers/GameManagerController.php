@@ -42,11 +42,33 @@ class GameManagerController extends Controller{
                     'names' => $names,
                 ]);
             case 3:
-                dd("Juego 3 - construccion");
-                //return view('games.game3', compact('game'));
+                $possibleSequence = [5, 10, 15, 20, 30, 50];
+                $sequence = $possibleSequence[rand(0, count($possibleSequence) - 1)];
+
+                $numbersDisplayed = [];
+                $currentValue = 0;
+                $sequenceToFind = [];
+
+                $exclusionCount = 5;
+                $exclusions = array_rand(array_flip(range(1, 18)), $exclusionCount);
+
+                if(!is_array($exclusions)){
+                    $exclusions = [$exclusions];
+                }
+
+                for($i = 0; $i < 20; $i++){
+                    $currentValue += $sequence;
+                    if(in_array($i, $exclusions)){
+                        $numbersDisplayed[] = '*';
+                        $sequenceToFind[] = $currentValue;
+                    }else{
+                        $numbersDisplayed[] = $currentValue;
+                    }
+                }
+
+                return view('games.attention.game-1', compact('game', 'numbersDisplayed', 'sequenceToFind', 'sequence'));
             default:
-                dd("Recurso no encontrado");
-               // return view('games.default', compact('game'));
+                abort(404);
         }
     }
 

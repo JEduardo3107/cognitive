@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Result\Game1Result;
 use App\Models\Result\Game2Result;
+use App\Models\Result\Game3Result;
 
 class GameResponseController extends Controller{
     public function index1(string $sessionid){
@@ -116,5 +117,20 @@ class GameResponseController extends Controller{
         }
 
         return round($percentage, 2); // Redondear a dos decimales
+    }
+
+    public function index3(string $sessionid){
+        $responses = Game3Result::where('session_id', $sessionid)->get();
+        $originalSequence = $responses->first()->sequence_data;
+
+        $originalSequence = json_decode($originalSequence, true); 
+
+        $timeInSeconds = $responses->first()->time ?? 0;
+
+        $minutes = floor($timeInSeconds / 60);
+        $seconds = $timeInSeconds % 60;
+        $formattedTime = sprintf('%02d:%02d', $minutes, $seconds);
+
+        return view('responses.attention.game-1', compact('responses', 'formattedTime', 'originalSequence'));
     }
 }
