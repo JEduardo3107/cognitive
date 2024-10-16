@@ -71,7 +71,12 @@
 
                 <div class="streak-container__details-container">
                     <div class="streak-container__details-title">
-                        Actividades semanales ({{ $streakCount }}/{{ $daysRequired }})
+                        @if($streakCount >= $daysRequired)
+                            Días ingresando: {{ $streakCount }}
+                        @else
+                            Días ingresando: ({{ $streakCount }} de {{ $daysRequired }})
+                        @endif
+                        
                     </div>
 
                     <div class="streak-container__details-content">
@@ -90,26 +95,34 @@
 
             <div class="activities-container">
                 @foreach ($activities as $index => $currentActivity)
-
-                    <a href="{{ route('game.index', ['game' => $currentActivity->id]) }}" class="noDefaultStyle activity-container {{ ($index == 0) ? 'activity--finish' : '' }}">
+                    <a href="{{ route('game.index', ['game' => $currentActivity['activity']->id]) }}" class="noDefaultStyle activity-container {{ ($currentActivity['is_completed']) ? 'activity--finish' : '' }}">
                         <span class="activity-container__status">
                         </span>
-                        <div class="activity-container__content {{ ($index == 0) ? 'activity-container--current' : '' }}">
+                        <div class="activity-container__content">
                             <div class="activity-container__description-container">
                                 <div class="activity-container__description-title">
                                     <p>
-                                        {{ $currentActivity->name }}
+                                        {{ $currentActivity['activity']->name }}
                                     </p>
                                 </div>
                                 <div class="activity-container__description-area">
                                     <p>
-                                        {{ $currentActivity->activityArea->name }}
+                                        {{ $currentActivity['activity']->activityArea->name }}
                                     </p>
                                 </div>
                             </div>
                             {{-- definir color --}}
-                            <div class="activity-container__image-container" style="background: {{ $currentActivity->activityArea->color }};">
-                                <img src="{{ asset('img/games_icon/1.png') }}" alt="Icono de actividad" class="activity-container__image">
+                            <div class="activity-container__image-container" style="background: {{ $currentActivity['activity']->activityArea->color }};">
+                                @php
+                                    $cardImage = $currentActivity['activity']->image_name;
+
+                                    if($cardImage && $cardImage != ""){
+                                        $cardImage = asset('img/games_icon/' . $cardImage . '.png');
+                                    }else{
+                                        $cardImage = asset('img/games_icon/1.png');
+                                    }
+                                @endphp
+                                <img src="{{ $cardImage }}" alt="Icono de actividad" class="activity-container__image">
                             </div>
                         </div>
                     </a>
@@ -117,15 +130,6 @@
             </div>
         </section>
     @endNotRole
-
-
-
-        
-
-
-
-
-
 
 @endsection
 

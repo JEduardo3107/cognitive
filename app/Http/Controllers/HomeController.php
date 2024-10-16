@@ -9,6 +9,8 @@ use App\Models\ActivityArea;
 use App\Models\AvailableActivity;
 use App\Models\ProfileQuestion;
 use App\Models\LoginStreak;
+use App\Models\UserActivity;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class HomeController extends Controller{
@@ -20,8 +22,6 @@ class HomeController extends Controller{
         $activities = [];
         
         if(!$user->hasRole('administrador')){
-            $activities = AvailableActivity::with('activityArea')->get();
-
             $answeredQuestionIds = ProfileAnswer::where('user_id', $user->id)
             ->pluck('question_id');
     
@@ -48,12 +48,80 @@ class HomeController extends Controller{
             $streakCount = LoginStreak::where('user_id', $user->id)
                             ->whereBetween('day_login', [$lastSelectedDay, $nextSelectedDay])
                             ->count();
+
+            // TODO: ACTIVIDADES DEL USUARIO
+            // Obtener el registro de actividades del usuario para el día actual
+            $userActivity = UserActivity::where('user_id', $user->id)
+                ->whereDate('created_at', Carbon::today())
+                ->latest()
+                ->first();
+
+            // Si se encontró el registro del día, recuperar las 3 actividades
+            if($userActivity){
+                $activities = [
+                    [
+                        'activity' => AvailableActivity::find($userActivity->activity_id_1),
+                        'is_completed' => $userActivity->activity_1_completed,
+                    ],
+                    [
+                        'activity' => AvailableActivity::find($userActivity->activity_id_2),
+                        'is_completed' => $userActivity->activity_2_completed,
+                    ],
+                    [
+                        'activity' => AvailableActivity::find($userActivity->activity_id_3),
+                        'is_completed' => $userActivity->activity_3_completed,
+                    ],
+                ];
+            }else{
+
+                // Seleccionar 3 áreas de actividad aleatorias con al menos una actividad disponible
+                $activityAreas = ActivityArea::has('availableActivities')
+                    ->inRandomOrder()
+                    ->take(3)
+                    ->get();
+
+                $activitiesIds = [];
+
+                foreach ($activityAreas as $activityArea) {
+                    // Seleccionar una actividad aleatoria por cada área de actividad
+                    $activity = $activityArea->availableActivities()
+                                ->inRandomOrder()
+                                ->first();
+
+                    if ($activity) {
+                        $activitiesIds[] = $activity->id;
+                    }
+                }
+
+                // Crear el registro en UserActivity
+                $userRegister = UserActivity::create([
+                    'user_id' => $user->id,
+                    'activity_id_1' => $activitiesIds[0] ?? null, // Verifica si existe el índice
+                    'activity_id_2' => $activitiesIds[1] ?? null,
+                    'activity_id_3' => $activitiesIds[2] ?? null
+                ]);
+
+                $activities = [
+                    [
+                        'activity' => AvailableActivity::find($userRegister->activity_id_1),
+                        'is_completed' => false,
+                    ],
+                    [
+                        'activity' => AvailableActivity::find($userRegister->activity_id_2),
+                        'is_completed' => false,
+                    ],
+                    [
+                        'activity' => AvailableActivity::find($userRegister->activity_id_3),
+                        'is_completed' => false,
+                    ],
+                ];
+            }
         }
     
         return view('welcome', [
             'streakCount' => $streakCount,
             'daysRequired' => $daysRequired,
-            'activities' => $activities
+            'activities' => $activities,
         ]);
     }
 }

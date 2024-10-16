@@ -22,5 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->withSchedule(function (Schedule $schedule) {
-        $schedule->command('cron:customtest')->everyFiveMinutes();
+        // php artisan schedule:list
+        //$schedule->command('cron:customtest')->everyFiveMinutes();
+
+        $schedule->command('app:assign-random-activities')->daily()->timezone('America/Mexico_City');
+        
     })->create();
