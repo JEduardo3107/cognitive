@@ -31,7 +31,7 @@
         </div>
     </div>
 
-    <form action="{{ route('gamestore.game3') }}" method="post" class="unselectable game-container">
+    <form action="{{ route('gamestore.game3', ['sessionToken' => $sessionToken, 'game_id' => $game->id]) }}" method="post" class="unselectable game-container">
         @csrf
         <input type="hidden" value="{{ json_encode($numbersDisplayed) }}" name="values">
         <div class="game-container__panel-container">

@@ -20,6 +20,7 @@ class HomeController extends Controller{
         $streakCount = 0;
         $daysRequired = env('APP_DAYS_REQUIRED_TO_STREAK', 2);
         $activities = [];
+        $session_id = "";
         
         if(!$user->hasRole('administrador')){
             $answeredQuestionIds = ProfileAnswer::where('user_id', $user->id)
@@ -58,6 +59,8 @@ class HomeController extends Controller{
 
             // Si se encontró el registro del día, recuperar las 3 actividades
             if($userActivity){
+                $session_id = $userActivity->session_id;
+
                 $activities = [
                     [
                         'activity' => AvailableActivity::find($userActivity->activity_id_1),
@@ -101,6 +104,8 @@ class HomeController extends Controller{
                     'activity_id_3' => $activitiesIds[2] ?? null
                 ]);
 
+                $session_id = $userRegister->session_id;
+
                 $activities = [
                     [
                         'activity' => AvailableActivity::find($userRegister->activity_id_1),
@@ -119,6 +124,7 @@ class HomeController extends Controller{
         }
     
         return view('welcome', [
+            'session_id' => $session_id,
             'streakCount' => $streakCount,
             'daysRequired' => $daysRequired,
             'activities' => $activities,

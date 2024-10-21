@@ -5,11 +5,43 @@ use App\Models\AvailableActivity;
 use Illuminate\Http\Request;
 use App\Models\Games\Game1;
 use App\Models\Games\Game1Setting;
+use App\Models\UserActivity;
 use Faker\Factory as Faker;
 
 class GameManagerController extends Controller{
-    public function index(AvailableActivity $game){
-        switch ($game->game_id){
+    public function index(string $sessionid, AvailableActivity $game){
+        // Obtener el registro de UserActivity
+        $userSession = UserActivity::where('session_id', $sessionid)->first();
+        $game_id = $game->id;
+
+        // Verifica si $game->game_id existe en una de las actividades
+        if($userSession->activity_id_1 == $game_id || $userSession->activity_id_2 == $game_id || $userSession->activity_id_3 == $game_id){
+            if($userSession->created_at->isToday()){
+                if(($userSession->activity_id_1 == $game_id && $userSession->activity_1_completed) ||
+                    ($userSession->activity_id_2 == $game_id && $userSession->activity_2_completed) ||
+                    ($userSession->activity_id_3 == $game_id && $userSession->activity_3_completed)){
+                    return redirect()->route('home.index')->with('notification', [
+                        'type' => 'info',
+                        'message' => 'La actividad ya fue completada.'
+                    ]);
+                }
+            }else{
+                return redirect()->route('home.index')->with('notification', [
+                    'type' => 'info',
+                    'message' => 'La actividad ha expirado.'
+                ]);
+            }
+        }else{
+            return redirect()->route('home.index')->with('notification', [
+                'type' => 'info',
+                'message' => 'Actividad no disponible.'
+            ]);
+        }
+
+        // La logica continua aqui
+        $sessionToken = $userSession->session_id;
+
+        switch($game->game_id){
             case 1:
                 // Seleccionar un registro aleatorio de Game1
                 $randomLevel = Game1::with(['options' => function ($query) {
@@ -19,6 +51,7 @@ class GameManagerController extends Controller{
 
                 return view('games.language.game-1', [
                     'game' => $game,
+                    'sessionToken' => $sessionToken,
                     'randomLevel' => $randomLevel,
                 ]);
             case 2:
@@ -38,6 +71,7 @@ class GameManagerController extends Controller{
             
                 return view('games.memory.game-1', [
                     'game' => $game,
+                    'sessionToken' => $sessionToken,
                     'phoneNumbers' => $phoneNumbers,
                     'names' => $names,
                 ]);
@@ -66,7 +100,14 @@ class GameManagerController extends Controller{
                     }
                 }
 
-                return view('games.attention.game-1', compact('game', 'numbersDisplayed', 'sequenceToFind', 'sequence'));
+                return view('games.attention.game-1', [
+                    'game' => $game,
+                    'sessionToken' => $sessionToken,
+                    'numbersDisplayed' => $numbersDisplayed,
+                    'sequenceToFind' => $sequenceToFind,
+                    'sequence' => $sequence,
+                ]);
+
             default:
                 abort(404);
         }

@@ -93,9 +93,67 @@
                 </div>
             </div>
 
-            <div class="activities-container">
+            <div class="activities-container unselectable">
                 @foreach ($activities as $index => $currentActivity)
-                    <a href="{{ route('game.index', ['game' => $currentActivity['activity']->id]) }}" class="noDefaultStyle activity-container {{ ($currentActivity['is_completed']) ? 'activity--finish' : '' }}">
+                    @php
+                        $cardImage = $currentActivity['activity']->image_name;
+
+                        if($cardImage && $cardImage != ""){
+                            $cardImage = asset('img/games_icon/' . $cardImage . '.png');
+                        } else {
+                            $cardImage = asset('img/games_icon/1.png');
+                        }
+                    @endphp
+                    @if ($currentActivity['is_completed'])
+                        <div class="noDefaultStyle activity-container activity--finish">
+                            <span class="activity-container__status"></span>
+                            <div class="activity-container__content">
+                                <div class="activity-container__description-container">
+                                    <div class="activity-container__description-title">
+                                        <p>
+                                            {{ $currentActivity['activity']->name }}
+                                        </p>
+                                    </div>
+                                    <div class="activity-container__description-area">
+                                        <p>
+                                            {{ $currentActivity['activity']->activityArea->name }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="activity-container__image-container" style="background: {{ $currentActivity['activity']->activityArea->color }};">
+                                    <img src="{{ $cardImage }}" alt="Icono de actividad" class="activity-container__image">
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ route('game.index', ['sessionid' => $session_id, 'game' => $currentActivity['activity']->id]) }}" class="noDefaultStyle activity-container {{ ($currentActivity['is_completed']) ? 'activity--finish' : '' }}">
+                            <span class="activity-container__status"></span>
+                            <div class="activity-container__content">
+                                <div class="activity-container__description-container">
+                                    <div class="activity-container__description-title">
+                                        <p>
+                                            {{ $currentActivity['activity']->name }}
+                                        </p>
+                                    </div>
+                                    <div class="activity-container__description-area">
+                                        <p>
+                                            {{ $currentActivity['activity']->activityArea->name }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="activity-container__image-container" style="background: {{ $currentActivity['activity']->activityArea->color }};">
+                                    <img src="{{ $cardImage }}" alt="Icono de actividad" class="activity-container__image">
+                                </div>
+                            </div>
+                        </a>
+                    @endif
+                @endforeach
+            </div>
+            
+
+            {{--<div class="activities-container">
+                @foreach ($activities as $index => $currentActivity)
+                    <a href="{{ route('game.index', ['sessionid' => $session_id, 'game' => $currentActivity['activity']->id]) }}" class="noDefaultStyle activity-container {{ ($currentActivity['is_completed']) ? 'activity--finish' : '' }}">
                         <span class="activity-container__status">
                         </span>
                         <div class="activity-container__content">
@@ -111,7 +169,7 @@
                                     </p>
                                 </div>
                             </div>
-                            {{-- definir color --}}
+                            {{-- definir color --}
                             <div class="activity-container__image-container" style="background: {{ $currentActivity['activity']->activityArea->color }};">
                                 @php
                                     $cardImage = $currentActivity['activity']->image_name;
@@ -127,7 +185,7 @@
                         </div>
                     </a>
                 @endforeach
-            </div>
+            </div>--}}
         </section>
     @endNotRole
 

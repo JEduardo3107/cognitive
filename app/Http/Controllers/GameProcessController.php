@@ -8,11 +8,12 @@ use App\Models\Games\Game1Setting;
 use App\Models\Result\Game1Result;
 use App\Models\Result\Game2Result;
 use App\Models\Result\Game3Result;
+use App\Models\UserActivity;
 use Illuminate\Support\Str;
 use Exception;
 
 class GameProcessController extends Controller{
-    public function store1(Request $request){
+    public function store1(string $sessionToken, string $game_id, Request $request){
         $rules = [];
         $wordIds = [];
 
@@ -82,7 +83,8 @@ class GameProcessController extends Controller{
                     'time' => $timeRequired,
                 ]);
             }
-
+            
+            $this->markActivityAsCompleted($sessionToken, $game_id);
             DB::commit();
 
             return redirect()->route('index.game1', ['sessionid' => $sessionId]);
@@ -97,7 +99,7 @@ class GameProcessController extends Controller{
         }
     }
 
-    public function store2(Request $request){
+    public function store2(string $sessionToken, string $game_id, Request $request){
         $rules = [
             'time' => 'required|integer',
             'number_value_required_0' => 'required|integer',
@@ -113,6 +115,9 @@ class GameProcessController extends Controller{
         try{
             // Validar los datos
             $validatedData = $request->validate($rules);
+
+            // Iniciar una transacción
+            DB::beginTransaction();
 
             // GENERAR UN UUID PARA LA SESION
             $sessionId = Str::uuid();
@@ -140,12 +145,13 @@ class GameProcessController extends Controller{
                 'number_4_response' => $request->input('number_value_selected_3'), 
             ]);
 
-            return redirect()->route('index.game2', ['sessionid' => $sessionId]);
+            $this->markActivityAsCompleted($sessionToken, $game_id);
+            DB::commit();
 
-           // DB::commit();
+            return redirect()->route('index.game2', ['sessionid' => $sessionId]);
         }catch(Exception $e){
             // Si algo falla, hacer rollback
-           // DB::rollback();
+            DB::rollback();
 
             return redirect()->route('home.index')->with('notification', [
                 'type' => 'error',
@@ -154,7 +160,7 @@ class GameProcessController extends Controller{
         }
     }
 
-    public function store3(Request $request){
+    public function store3(string $sessionToken, string $game_id, Request $request){
         $rules = [
             'values' => 'required|string', // Validamos que 'values' sea un JSON válido
             'time' => 'required|integer|min:0', // Validamos que el tiempo sea un número entero positivo
@@ -228,6 +234,8 @@ class GameProcessController extends Controller{
                 ]);
             }
 
+            $this->markActivityAsCompleted($sessionToken, $game_id);
+
             DB::commit();
 
             return redirect()->route('index.game3', ['sessionid' => $sessionId]);
@@ -240,4 +248,30 @@ class GameProcessController extends Controller{
             ]);
         }
     }
+
+    private function markActivityAsCompleted(string $sessionToken, string $game_id){
+        $sessionRecord = UserActivity::where('session_id', $sessionToken)->first();
+
+        $updated = false;
+
+        if($sessionRecord){
+            if($sessionRecord->activity_id_1 == $game_id){
+                $sessionRecord->activity_1_completed = true;
+                $updated = true;
+            }elseif($sessionRecord->activity_id_2 == $game_id){
+                $sessionRecord->activity_2_completed = true;
+                $updated = true;
+            }elseif($sessionRecord->activity_id_3 == $game_id){
+                $sessionRecord->activity_3_completed = true;
+                $updated = true;
+            }
+
+            if($updated){
+                $sessionRecord->save();
+            }
+        }
+
+        return $updated;
+    }
+
 }

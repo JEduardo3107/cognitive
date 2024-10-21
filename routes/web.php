@@ -38,10 +38,6 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-   //Route::get('/show-questions', [QuestionsController::class, 'index'])->name('questions.index');
-
-   // Route::get('/questions/{question:id}', [QuestionsController::class, 'show'])->name('questions.show');
-    
     Route::get('/create-answer/{question:id}', [AnswerController::class, 'create'])->name('answer.create');
     Route::post('/create-answer/{question:id}', [AnswerController::class, 'store'])->name('answer.store');
 
@@ -62,14 +58,13 @@ Route::middleware(['auth', 'checkLoginStreak'])->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/play/{game:id}', [GameManagerController::class, 'index'])->name('game.index');
+    Route::get('/play/{sessionid}/{game:id}', [GameManagerController::class, 'index'])->name('game.index');
 });
 
-
-Route::middleware(['auth'])->group(function () {
-    Route::post('/process/1/', [GameProcessController::class, 'store1'])->name('gamestore.game1');
-    Route::post('/process/2/', [GameProcessController::class, 'store2'])->name('gamestore.game2');
-    Route::post('/process/3/', [GameProcessController::class, 'store3'])->name('gamestore.game3');
+Route::middleware(['auth', 'check_activity_status'])->group(function () {
+    Route::post('/process/1/{sessionToken}/{game_id}', [GameProcessController::class, 'store1'])->name('gamestore.game1');
+    Route::post('/process/2/{sessionToken}/{game_id}', [GameProcessController::class, 'store2'])->name('gamestore.game2');
+    Route::post('/process/3/{sessionToken}/{game_id}', [GameProcessController::class, 'store3'])->name('gamestore.game3');
 });
 
 Route::middleware(['auth'])->group(function () {
