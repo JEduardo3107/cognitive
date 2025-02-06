@@ -24,5 +24,11 @@ class UserActivity extends Model{
         'activity_2_completed',
         'activity_id_3',
         'activity_3_completed',
+        'activity_id_4',
+        'activity_4_completed',
+        'activity_id_5',
+        'activity_5_completed',
+        'activity_id_6',
+        'activity_6_completed',
     ];
 }

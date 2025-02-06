@@ -15,27 +15,39 @@ class GameManagerController extends Controller{
         $userSession = UserActivity::where('session_id', $sessionid)->first();
         $game_id = $game->id;
 
-        // Verifica si $game->game_id existe en una de las actividades
-        if($userSession->activity_id_1 == $game_id || $userSession->activity_id_2 == $game_id || $userSession->activity_id_3 == $game_id){
-            if($userSession->created_at->isToday()){
-                if(($userSession->activity_id_1 == $game_id && $userSession->activity_1_completed) ||
-                    ($userSession->activity_id_2 == $game_id && $userSession->activity_2_completed) ||
-                    ($userSession->activity_id_3 == $game_id && $userSession->activity_3_completed)){
-                    return redirect()->route('home.index')->with('notification', [
-                        'type' => 'info',
-                        'message' => 'La actividad ya fue completada.'
-                    ]);
-                }
-            }else{
-                return redirect()->route('home.index')->with('notification', [
-                    'type' => 'info',
-                    'message' => 'La actividad ha expirado.'
-                ]);
-            }
-        }else{
+        // Crear un array con los IDs y estados de las actividades
+        $activities = [
+            ['id' => $userSession->activity_id_1, 'completed' => $userSession->activity_1_completed],
+            ['id' => $userSession->activity_id_2, 'completed' => $userSession->activity_2_completed],
+            ['id' => $userSession->activity_id_3, 'completed' => $userSession->activity_3_completed],
+            ['id' => $userSession->activity_id_4, 'completed' => $userSession->activity_4_completed],
+            ['id' => $userSession->activity_id_5, 'completed' => $userSession->activity_5_completed],
+            ['id' => $userSession->activity_id_6, 'completed' => $userSession->activity_6_completed],
+        ];
+
+        // Verificar si el juego está en la lista de actividades
+        $activity = collect($activities)->firstWhere('id', $game_id);
+
+        if (!$activity) {
             return redirect()->route('home.index')->with('notification', [
                 'type' => 'info',
                 'message' => 'Actividad no disponible.'
+            ]);
+        }
+
+        // Verificar si la sesión es de hoy
+        if (!$userSession->created_at->isToday()) {
+            return redirect()->route('home.index')->with('notification', [
+                'type' => 'info',
+                'message' => 'La actividad ha expirado.'
+            ]);
+        }
+
+        // Verificar si la actividad ya fue completada
+        if ($activity['completed']) {
+            return redirect()->route('home.index')->with('notification', [
+                'type' => 'info',
+                'message' => 'La actividad ya fue completada.'
             ]);
         }
 

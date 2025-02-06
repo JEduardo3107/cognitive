@@ -36,11 +36,14 @@ class CheckActivityStatus{
         }
 
         // Verifica si $game->game_id existe en una de las actividades
-        if ($userSession->activity_id_1 == $game_id || $userSession->activity_id_2 == $game_id || $userSession->activity_id_3 == $game_id) {
+        if ($userSession->activity_id_1 == $game_id || $userSession->activity_id_2 == $game_id || $userSession->activity_id_3 == $game_id || $userSession->activity_id_4 == $game_id || $userSession->activity_id_5 == $game_id || $userSession->activity_id_6 == $game_id) {
             if($userSession->created_at->isToday()){
                 if (($userSession->activity_id_1 == $game_id && $userSession->activity_1_completed) ||
                     ($userSession->activity_id_2 == $game_id && $userSession->activity_2_completed) ||
-                    ($userSession->activity_id_3 == $game_id && $userSession->activity_3_completed)) {
+                    ($userSession->activity_id_3 == $game_id && $userSession->activity_3_completed) ||
+                    ($userSession->activity_id_4 == $game_id && $userSession->activity_4_completed) ||
+                    ($userSession->activity_id_5 == $game_id && $userSession->activity_5_completed) ||
+                    ($userSession->activity_id_6 == $game_id && $userSession->activity_6_completed)) {
                     return redirect()->route('home.index')->with('notification', [
                         'type' => 'info',
                         'message' => 'La actividad ya fue completada.'

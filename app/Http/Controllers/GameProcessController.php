@@ -477,7 +477,7 @@ class GameProcessController extends Controller{
         }
     }
 
-    private function markActivityAsCompleted(string $sessionToken, string $game_id){
+    /*private function markActivityAsCompleted(string $sessionToken, string $game_id){
         $sessionRecord = UserActivity::where('session_id', $sessionToken)->first();
 
         $updated = false;
@@ -500,5 +500,34 @@ class GameProcessController extends Controller{
         }
 
         return $updated;
+    }*/
+
+    private function markActivityAsCompleted(string $sessionToken, string $game_id) {
+        $sessionRecord = UserActivity::where('session_id', $sessionToken)->first();
+    
+        if (!$sessionRecord) {
+            return false;
+        }
+    
+        // Crear un array con las actividades y sus estados
+        $activities = [
+            'activity_id_1' => 'activity_1_completed',
+            'activity_id_2' => 'activity_2_completed',
+            'activity_id_3' => 'activity_3_completed',
+            'activity_id_4' => 'activity_4_completed',
+            'activity_id_5' => 'activity_5_completed',
+            'activity_id_6' => 'activity_6_completed',
+        ];
+    
+        // Buscar la actividad y marcarla como completada
+        foreach ($activities as $activityIdField => $completedField) {
+            if ($sessionRecord->$activityIdField == $game_id) {
+                $sessionRecord->$completedField = true;
+                $sessionRecord->save();
+                return true;
+            }
+        }
+    
+        return false;
     }
 }

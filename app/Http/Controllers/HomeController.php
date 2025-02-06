@@ -61,65 +61,57 @@ class HomeController extends Controller{
             if($userActivity){
                 $session_id = $userActivity->session_id;
 
-                $activities = [
-                    [
-                        'activity' => AvailableActivity::find($userActivity->activity_id_1),
-                        'is_completed' => $userActivity->activity_1_completed,
-                    ],
-                    [
-                        'activity' => AvailableActivity::find($userActivity->activity_id_2),
-                        'is_completed' => $userActivity->activity_2_completed,
-                    ],
-                    [
-                        'activity' => AvailableActivity::find($userActivity->activity_id_3),
-                        'is_completed' => $userActivity->activity_3_completed,
-                    ],
+                // Obtener los IDs de las actividades
+                $activitiesIds = [
+                    $userActivity->activity_id_1,
+                    $userActivity->activity_id_2,
+                    $userActivity->activity_id_3,
+                    $userActivity->activity_id_4,
+                    $userActivity->activity_id_5,
+                    $userActivity->activity_id_6,
                 ];
+
+                // Obtener las actividades en una sola consulta y asegurarnos de mantener el orden
+                $activitiesCollection = AvailableActivity::whereIn('id', $activitiesIds)->get()->keyBy('id');
+
+                // Mapear las actividades asegurando que estén bien asignadas
+                $activities = collect($activitiesIds)->map(function ($id, $index) use ($userActivity, $activitiesCollection) {
+                    return [
+                        'activity' => $activitiesCollection->get($id), // Obtener la actividad por ID
+                        'is_completed' => $userActivity->{'activity_' . ($index + 1) . '_completed'}, // Obtener el estado correspondiente
+                    ];
+                })->toArray();
             }else{
 
-                // Seleccionar 3 áreas de actividad aleatorias con al menos una actividad disponible
                 $activityAreas = ActivityArea::has('availableActivities')
                     ->inRandomOrder()
-                    ->take(3)
+                    ->take(4)
+                    ->with(['availableActivities' => function ($query) {
+                        $query->inRandomOrder()->take(2); // Tomar 2 actividades por área
+                    }])
                     ->get();
 
-                $activitiesIds = [];
-
-                foreach ($activityAreas as $activityArea) {
-                    // Seleccionar una actividad aleatoria por cada área de actividad
-                    $activity = $activityArea->availableActivities()
-                                ->inRandomOrder()
-                                ->first();
-
-                    if ($activity) {
-                        $activitiesIds[] = $activity->id;
-                    }
-                }
+                // Obtener las 6 actividades en total
+                $activities = $activityAreas->pluck('availableActivities')->flatten()->take(6);
+                $activitiesIds = $activities->pluck('id')->toArray();
 
                 // Crear el registro en UserActivity
                 $userRegister = UserActivity::create([
                     'user_id' => $user->id,
                     'activity_id_1' => $activitiesIds[0] ?? null, // Verifica si existe el índice
                     'activity_id_2' => $activitiesIds[1] ?? null,
-                    'activity_id_3' => $activitiesIds[2] ?? null
+                    'activity_id_3' => $activitiesIds[2] ?? null,
+                    'activity_id_4' => $activitiesIds[3] ?? null,
+                    'activity_id_5' => $activitiesIds[4] ?? null,
+                    'activity_id_6' => $activitiesIds[5] ?? null
                 ]);
 
                 $session_id = $userRegister->session_id;
 
-                $activities = [
-                    [
-                        'activity' => AvailableActivity::find($userRegister->activity_id_1),
-                        'is_completed' => false,
-                    ],
-                    [
-                        'activity' => AvailableActivity::find($userRegister->activity_id_2),
-                        'is_completed' => false,
-                    ],
-                    [
-                        'activity' => AvailableActivity::find($userRegister->activity_id_3),
-                        'is_completed' => false,
-                    ],
-                ];
+                $activities = $activities->map(fn($activity) => [
+                    'activity' => $activity,
+                    'is_completed' => false,
+                ])->toArray();
             }
         }
     
