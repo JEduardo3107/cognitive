@@ -8,6 +8,9 @@ use App\Models\Games\Game1Setting;
 use App\Models\Result\Game1Result;
 use App\Models\Result\Game2Result;
 use App\Models\Result\Game3Result;
+use App\Models\Result\Game4Result;
+use App\Models\Result\Game5Result;
+use App\Models\Result\Game6Result;
 use App\Models\UserActivity;
 use Illuminate\Support\Str;
 use Exception;
@@ -249,6 +252,231 @@ class GameProcessController extends Controller{
         }
     }
 
+    public function store4(string $sessionToken, string $game_id, Request $request){
+        
+        $rules = [
+            'time' => 'required|integer',
+            'winner' => 'required|integer',
+            'cube_top' => 'required|integer',
+            'cube_center' => 'required|integer',
+            'cube_bottom' => 'required|integer',
+        ];
+
+        try{
+            // Validar los datos
+            $validatedData = $request->validate($rules);
+
+            // Iniciar una transacción
+            DB::beginTransaction();
+
+            // GENERAR UN UUID PARA LA SESION
+            $sessionId = Str::uuid();
+
+            $timeRequired = $request->input('time');
+
+            if(!$timeRequired){
+                $timeRequired = 0;
+            }
+
+            // Obtener el user_id del usuario autenticado
+            $userId = Auth::user()->id;
+
+            $percentage_earned = 0;
+
+            $number_winner = $request->input('winner');
+            $number_top = $request->input('cube_top');
+            $number_center = $request->input('cube_center');
+            $number_bottom = $request->input('cube_bottom');
+
+            $matches = 0;
+
+            if($number_top == $number_winner){
+                $matches++;
+            }
+            if($number_center == $number_winner){
+                $matches++;
+            }
+            if($number_bottom == $number_winner){
+                $matches++;
+            }
+
+            $percentage_earned = intval(($matches / 3) * 100);
+
+            Game4Result::create([
+                'user_id' => $userId,
+                'session_id' => $sessionId,
+                'time' => $timeRequired,
+                'number_winner' => $number_winner,
+                'number_top' => $number_top,
+                'number_center' => $number_center,
+                'number_bottom' => $number_bottom,
+
+                'percentage' => $percentage_earned,
+            ]);
+
+            $this->markActivityAsCompleted($sessionToken, $game_id);
+            DB::commit();
+
+            return redirect()->route('index.game4', ['sessionid' => $sessionId]);
+        }catch(Exception $e){
+            // Si algo falla, hacer rollback
+            DB::rollback();
+
+            return redirect()->route('home.index')->with('notification', [
+                'type' => 'error',
+                'message' => 'Ocurrió un error inesperado.'
+            ]);
+        }
+    }
+
+    public function store5(string $sessionToken, string $game_id, Request $request){
+        $rules = [
+            'time' => 'required|integer',
+            'option_1' => 'required|uuid',
+            'option_2' => 'required|uuid',
+            'option_3' => 'required|uuid',
+            'option_4' => 'required|uuid',
+            'option_5' => 'required|uuid',
+            'user_selection_1' => 'required|uuid',
+            'user_selection_2' => 'required|uuid',
+            'user_selection_3' => 'required|uuid',
+            'user_selection_4' => 'required|uuid',
+            'user_selection_5' => 'required|uuid',
+        ];
+
+        try{
+            // Validar los datos
+            $validatedData = $request->validate($rules);
+
+            // Iniciar una transacción
+            DB::beginTransaction();
+
+            // GENERAR UN UUID PARA LA SESION
+            $sessionId = Str::uuid();
+
+            $timeRequired = $request->input('time');
+
+            if(!$timeRequired){
+                $timeRequired = 0;
+            }
+
+            // Obtener el user_id del usuario autenticado
+            $userId = Auth::user()->id;
+
+            // Valores correctos y seleccionados
+            $value_1 = $request->input('option_1');
+            $user_selection_1 = $request->input('user_selection_1');
+
+            $value_2 = $request->input('option_2');
+            $user_selection_2 = $request->input('user_selection_2');
+
+            $value_3 = $request->input('option_3');
+            $user_selection_3 = $request->input('user_selection_3');
+
+            $value_4 = $request->input('option_4');
+            $user_selection_4 = $request->input('user_selection_4');
+
+            $value_5 = $request->input('option_5');
+            $user_selection_5 = $request->input('user_selection_5');
+
+            $percentage_earned = 0;
+
+            if($value_1 == $user_selection_1){
+                $percentage_earned += 1;
+            }
+            if($value_2 == $user_selection_2){
+                $percentage_earned += 1;
+            }
+            if($value_3 == $user_selection_3){
+                $percentage_earned += 1;
+            }
+            if($value_4 == $user_selection_4){
+                $percentage_earned += 1;
+            }
+            if($value_5 == $user_selection_5){
+                $percentage_earned += 1;
+            }
+
+            Game5Result::create([
+                'user_id' => $userId,
+                'session_id' => $sessionId,
+                'time' => $timeRequired,
+
+                'value_1' => $value_1,
+                'user_selection_1' => $user_selection_1,
+                'value_2' => $value_2,
+                'user_selection_2' => $user_selection_2,
+                'value_3' => $value_3,
+                'user_selection_3' => $user_selection_3,
+                'value_4' => $value_4,
+                'user_selection_4' => $user_selection_4,
+                'value_5' => $value_5,
+                'user_selection_5' => $user_selection_5,
+
+                'percentage' => $percentage_earned,
+            ]);
+
+            $this->markActivityAsCompleted($sessionToken, $game_id);
+            DB::commit();
+
+            return redirect()->route('index.game5', ['sessionid' => $sessionId]);
+        }catch(Exception $e){
+            // Si algo falla, hacer rollback
+            DB::rollback();
+
+            return redirect()->route('home.index')->with('notification', [
+                'type' => 'error',
+                'message' => 'Ocurrió un error inesperado.'
+            ]);
+        }
+    }
+
+    public function store6(string $sessionToken, string $game_id, Request $request){
+        $rules = [
+            'time' => 'required|integer',
+        ];
+
+        // Game6Result
+        try{
+            // Validar los datos
+            $validatedData = $request->validate($rules);
+
+            // Iniciar una transacción
+            DB::beginTransaction();
+
+            // GENERAR UN UUID PARA LA SESION
+            $sessionId = Str::uuid();
+
+            $timeRequired = $request->input('time');
+
+            if(!$timeRequired){
+                $timeRequired = 0;
+            }
+
+            // Obtener el user_id del usuario autenticado
+            $userId = Auth::user()->id;
+
+            Game6Result::create([
+                'user_id' => $userId,
+                'session_id' => $sessionId,
+                'time' => $timeRequired,
+            ]);
+
+            $this->markActivityAsCompleted($sessionToken, $game_id);
+            DB::commit();
+
+            return redirect()->route('index.game6', ['sessionid' => $sessionId]);
+        }catch(Exception $e){
+            // Si algo falla, hacer rollback
+            DB::rollback();
+
+            return redirect()->route('home.index')->with('notification', [
+                'type' => 'error',
+                'message' => 'Ocurrió un error inesperado.'
+            ]);
+        }
+    }
+
     private function markActivityAsCompleted(string $sessionToken, string $game_id){
         $sessionRecord = UserActivity::where('session_id', $sessionToken)->first();
 
@@ -273,5 +501,4 @@ class GameProcessController extends Controller{
 
         return $updated;
     }
-
 }

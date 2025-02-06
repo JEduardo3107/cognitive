@@ -139,7 +139,7 @@
                 </button>
             </div>
         </div>
-    </div>
+    </form>
 @endsection
 
 @push('script')

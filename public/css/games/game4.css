@@ -1,0 +1,81 @@
+.column-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    height: 100%;
+}
+
+.column-container .cube-container:nth-child(1){
+    z-index: 40;
+}
+
+.column-container .cube-container:nth-child(2){
+    z-index: 30;
+}
+
+.column-container .cube-container:nth-child(3){
+    z-index: 20;
+}
+
+.cube-container{
+    width: 160px;
+    height: 100px;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateY(0deg);
+    transition: transform 0.8s ease-in-out;
+}
+
+.face-1,
+.face-2,
+.face-3,
+.face-4{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.face-1{
+    transform: rotateY(0deg) translateZ(80px);
+}
+
+.face-2{
+    transform: rotateY(90deg) translateZ(80px);
+}
+
+.face-3{
+    transform: rotateY(180deg) translateZ(80px);
+}
+
+.face-4{
+    transform: rotateY(-90deg) translateZ(80px);
+}
+
+/* Estados de rotación */
+.face-1--show{
+    transform: rotateY(0deg);
+}
+
+.face-2--show{
+    transform: rotateY(-90deg);
+}
+
+.face-3--show{
+    transform: rotateY(-180deg);
+}
+
+.face-4--show{
+    transform: rotateY(-270deg);
+}
+
+.face-image{
+    width: 100%;
+    height: 100%;
+}

@@ -5,6 +5,7 @@ use App\Models\AvailableActivity;
 use Illuminate\Http\Request;
 use App\Models\Games\Game1;
 use App\Models\Games\Game1Setting;
+use App\Models\Games\Game5Option;
 use App\Models\UserActivity;
 use Faker\Factory as Faker;
 
@@ -108,6 +109,88 @@ class GameManagerController extends Controller{
                     'sequence' => $sequence,
                 ]);
 
+            case 4:
+                $winner = rand(1, 12);
+
+                $characters = [
+                    'Sheriff Woody',
+                    'Mirabel Madrigal',
+                    'Alegría Intensamente',
+                    'Goofy',
+                    'Tigger',
+                    'Remy Ratatouille',
+                    'Mohana',
+                    'Elsa Frozen',
+                    'Popeye',
+                    'Olaf Frozen',
+                    'Winnie Pooh',
+                    'Blanca Nieves'
+                ];
+
+                $character = $characters[$winner - 1];
+
+                $cube_top = $this->generateOptions($winner);
+                $cube_center = $this->generateOptions($winner);
+                $cube_bottom = $this->generateOptions($winner);
+
+                // Contamos cuántos cubos tienen el ganador en la primera posición
+                $firstPositionCount = 0;
+                $cubes = [&$cube_top, &$cube_center, &$cube_bottom];
+
+                foreach($cubes as &$cube){
+                    if($cube[0] == $winner){
+                        $firstPositionCount++;
+                    }
+                }
+
+                if($firstPositionCount > 1){
+                    foreach($cubes as &$cube){
+                        if($cube[0] == $winner && $firstPositionCount > 1){
+                            $newPosition = rand(1, 3);
+                            array_splice($cube, $newPosition, 0, $winner);
+                            array_splice($cube, array_search($winner, $cube), 1);
+
+                            $firstPositionCount--;
+                        }
+                    }
+                }
+
+                return view('games.building.game-1', [
+                    'game' => $game,
+                    'sessionToken' => $sessionToken,
+                    'winner' => $winner,
+                    'cube_top' => $cube_top,
+                    'cube_center' => $cube_center,
+                    'cube_bottom' => $cube_bottom,
+                    'character' => $character,
+                ]);
+
+            case 5:
+                // Obtener 5 grupos de opciones aleatorias
+                $options = Game5Option::inRandomOrder()->get()->chunk(5);
+
+                $randomValues = [];
+                
+                foreach($options as $index => $group){
+                    $randomValues[$index] = $group->random();
+                }
+
+                return view('games.language.game-2', [
+                    'game' => $game,
+                    'sessionToken' => $sessionToken,
+                    'options' => $options,
+                    'randomValues' => $randomValues,
+                ]);
+
+            case 6:
+                $randomNumbers = collect(range(1, 20))->shuffle()->take(8)->toArray();
+
+                return view('games.memory.game-2', [
+                    'game' => $game,
+                    'sessionToken' => $sessionToken,
+                    'randomNumbers' => $randomNumbers,
+                ]);
+
             default:
                 abort(404);
         }
@@ -126,5 +209,19 @@ class GameManagerController extends Controller{
             
         }
         return $number;
+    }
+
+    private function generateOptions($winner){
+        $numbers = range(1, 12);
+        unset($numbers[array_search($winner, $numbers)]); // Eliminar el número ganador de la lista
+
+        // Obtener 3 números aleatorios sin el ganador
+        $randomNumbers = array_rand(array_flip($numbers), 3);
+
+        // Insertar el ganador en una posición aleatoria
+        $randomNumbers[] = $winner;
+        shuffle($randomNumbers);
+
+        return $randomNumbers;
     }
 }

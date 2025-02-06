@@ -5,6 +5,10 @@ use Illuminate\Http\Request;
 use App\Models\Result\Game1Result;
 use App\Models\Result\Game2Result;
 use App\Models\Result\Game3Result;
+use App\Models\Result\Game4Result;
+use App\Models\Result\Game5Result;
+use App\Models\Result\Game6Result;
+use App\Models\Games\Game5Option;
 
 class GameResponseController extends Controller{
     public function index1(string $sessionid){
@@ -132,5 +136,105 @@ class GameResponseController extends Controller{
         $formattedTime = sprintf('%02d:%02d', $minutes, $seconds);
 
         return view('responses.attention.game-1', compact('responses', 'formattedTime', 'originalSequence'));
+    }
+
+    public function index4(string $sessionid){
+        $responses = Game4Result::where('session_id', $sessionid)->first();
+
+        $timeInSeconds = $responses->time ?? 0;
+
+        $minutes = floor($timeInSeconds / 60);
+        $seconds = $timeInSeconds % 60;
+        $formattedTime = sprintf('%02d:%02d', $minutes, $seconds);
+
+        if($responses->percentage <= 30){
+            $message = "¡No te rindas! Cada error es una oportunidad para aprender.";
+        }elseif($responses->percentage <= 70){
+            $message = "¡Buen intento! Estás en el camino correcto, sigue practicando.";
+        }elseif($responses->percentage <= 90){
+            $message = "¡Vas bien! Un poco más de esfuerzo y lo lograrás.";
+        }else{
+            $message = "¡Excelente trabajo! Has hecho un gran esfuerzo.";
+        }
+
+        return view('responses.building.game-1', [
+            'response' => $responses,
+            'formattedTime' => $formattedTime,
+            'message' => $message
+        ]);
+    }
+
+    public function index5(string $sessionid){
+        $response = Game5Result::where('session_id', $sessionid)->first();
+
+        $timeInSeconds = $response->time ?? 0;
+
+        $minutes = floor($timeInSeconds / 60);
+        $seconds = $timeInSeconds % 60;
+        $formattedTime = sprintf('%02d:%02d', $minutes, $seconds);
+
+        $aciertos = $response->percentage;
+
+        if($aciertos < 1){
+            $message = "¡No te rindas! Cada error es una oportunidad para aprender.";
+        }elseif($aciertos < 2){
+            $message = "¡Buen intento! Estás en el camino correcto, sigue practicando.";
+        }elseif($aciertos < 3){
+            $message = "¡Vas bien! Un poco más de esfuerzo y lo lograrás.";
+        }else{
+            $message = "¡Excelente trabajo! Has hecho un gran esfuerzo.";
+        }
+
+        $values = [
+            $response->value_1,
+            $response->value_2,
+            $response->value_3,
+            $response->value_4,
+            $response->value_5,
+        ];
+    
+        $userSelections = [
+            $response->user_selection_1,
+            $response->user_selection_2,
+            $response->user_selection_3,
+            $response->user_selection_4,
+            $response->user_selection_5,
+        ];
+
+        // Obtener la información de las opciones desde el modelo Game5Option
+        $options = Game5Option::whereIn('id', $values)->get();
+        $selections = Game5Option::whereIn('id', $userSelections)->get();
+
+        // Ordenar las opciones y selecciones de acuerdo al orden de $values y $userSelections
+        $options = $options->sortBy(function ($option) use ($values) {
+            return array_search($option->id, $values);
+        })->values();  // Usar values() para reindexar la colección
+
+        $selections = $selections->sortBy(function ($selection) use ($userSelections) {
+            return array_search($selection->id, $userSelections);
+        })->values(); // Usar values() para reindexar la colección
+
+        return view('responses.language.game-2', [
+            'response' => $response,
+            'formattedTime' => $formattedTime,
+            'message' => $message,
+            'options' => $options,
+            'selections' => $selections
+        ]);
+    }
+
+    public function index6(string $sessionid){
+        $response = Game6Result::where('session_id', $sessionid)->first();
+
+        $timeInSeconds = $response->time ?? 0;
+
+        $minutes = floor($timeInSeconds / 60);
+        $seconds = $timeInSeconds % 60;
+        $formattedTime = sprintf('%02d:%02d', $minutes, $seconds);
+
+        return view('responses.memory.game-2', [
+            'response' => $response,
+            'formattedTime' => $formattedTime,
+        ]);
     }
 }
