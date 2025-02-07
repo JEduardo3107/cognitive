@@ -17,8 +17,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     cards.forEach(element => {
         element.onclick = () => {
-            // Si la carta ya está correctamente emparejada, no hacer nada
-            if (element.classList.contains('memory-card--solid') || flippedCards.length >= 2) {
+            // Si la carta ya está emparejada o ya está volteada, no hacer nada
+            if (element.classList.contains('memory-card--solid') || 
+                element.classList.contains('memory-card--active') || 
+                flippedCards.length >= 2) {
                 return;
             }
 
@@ -29,28 +31,30 @@ document.addEventListener("DOMContentLoaded", function() {
             // Si ya tenemos dos cartas volteadas
             if (flippedCards.length === 2) {
                 setTimeout(() => {
+                    let [card1, card2] = flippedCards;
+
                     // Comparamos si las cartas son iguales
-                    if (flippedCards[0].dataset.cardId === flippedCards[1].dataset.cardId) {
+                    if (card1.dataset.cardId === card2.dataset.cardId) {
                         // Si son iguales, las dejamos volteadas y cambiamos a "solid"
-                        flippedCards[0].classList.remove('memory-card--active');
-                        flippedCards[1].classList.remove('memory-card--active');
-                        flippedCards[0].classList.add('memory-card--solid');
-                        flippedCards[1].classList.add('memory-card--solid');
+                        card1.classList.remove('memory-card--active');
+                        card2.classList.remove('memory-card--active');
+                        card1.classList.add('memory-card--solid');
+                        card2.classList.add('memory-card--solid');
 
                         correctas++; // Aumentamos el contador de aciertos
-                        flippedCards = []; // Reseteamos las cartas volteadas
 
                         if (correctas === 8) { // 8 pares encontrados
-                            document.getElementById('finalize-button').disabled = false; // Habilitamos el botón
+                            document.getElementById('finalize-button').disabled = false;
                         }
                     } else {
                         // Si no son iguales, las volteamos de nuevo
-                        flippedCards[0].classList.remove('memory-card--active');
-                        flippedCards[1].classList.remove('memory-card--active');
-                        flippedCards = []; // Reseteamos las cartas volteadas
+                        card1.classList.remove('memory-card--active');
+                        card2.classList.remove('memory-card--active');
                     }
-                }, 500); // Esperamos 1 segundo antes de comparar
+
+                    flippedCards = []; // Reseteamos las cartas volteadas
+                }, 500); // Esperamos 0.5 segundos antes de comparar
             }
-        }
+        };
     });
 });
